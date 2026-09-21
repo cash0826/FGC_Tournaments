@@ -1,6 +1,6 @@
 from config import Config
 from flask import Flask
-from extensions import db, migrate, bcrypt, jwt, api
+from extensions import db, migrate, api
 
 def create_app():
   app = Flask(__name__)
@@ -9,15 +9,15 @@ def create_app():
   # initialize extensions
   db.init_app(app)
   migrate.init_app(app)
-  bcrypt.init_app(app)
-  jwt.init_app(app)
+  # bcrypt.init_app(app)
+  # jwt.init_app(app)
   api.init_app(app)
   
   # import models
-  from models import User
+  # TODO: from models import User
   
   # import resources
-  from controllers import Auth
+   # TODO: from controllers import Auth
   
   with app.app_context():
     db.create_all()
