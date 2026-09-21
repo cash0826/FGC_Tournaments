@@ -7,4 +7,3 @@ migrate = Migrate()
 api = Api()
 
 # Evaluate adding CORS extension
-# Api not added either
