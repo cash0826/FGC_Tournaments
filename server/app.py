@@ -1,7 +1,7 @@
 from config import Config
 from flask import Flask
 from extensions import db, migrate, api
-
+from models import User, Role, UserRole
 
 def create_app():
   app = Flask(__name__)
@@ -14,16 +14,8 @@ def create_app():
   # jwt.init_app(app)
   api.init_app(app)
   
-  # import models
-  from models.user import User
-  from models.role import Role
-  from models.user_role import UserRole
-  
   # import resources
    # TODO: from controllers import Auth
-  
-  with app.app_context():
-    db.create_all()
   
   return app
   

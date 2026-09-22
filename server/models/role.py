@@ -5,8 +5,8 @@ class Role(db.Model):
   
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String(255), default='viewer', nullable=False)
-  description = db.Column(db.Text)
-  is_system_role = db.Column(db.Boolean, nullable=False, default=False)
+  description = db.Column(db.Text, nullable=True)
+  is_system_role = db.Column(db.Boolean, nullable=True, default=False)
   
   # TODO: relationships
   
