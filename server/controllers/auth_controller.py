@@ -1,6 +1,6 @@
 from flask_restful import Resource
 from flask_jwt_extended import create_access_token
-from services.auth_service import authenticate_user
+from services import UserService
 
 def _issue_session(user, status_code):
   # create_access_token returns an encoded access token
@@ -25,7 +25,7 @@ class Login(Resource):
       return { "error": "Email and Password are required"}, 400
     
     try: 
-      user = authenticate_user(email, password)
+      user = UserService.authenticate_user(email, password)
     except ValueError as error:
       return {"error": str(error)}, 401
     

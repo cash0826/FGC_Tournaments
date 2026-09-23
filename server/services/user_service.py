@@ -1,7 +1,5 @@
 from extensions import db
-from services.auth_service import validate_pw_strength
 from models import User, Role, UserRole
-from .auth_service import validate_pw_strength
 
 class UserService:
   
@@ -31,16 +29,28 @@ class UserService:
       .all()
     )
     return [r[0] for r in roles]
+
+  @staticmethod
+  def authenticate_user(email, password):
+    user = UserService.get_user_by_email(email=email)
+    if not user or not isinstance(password, str) or not user.verify_password(password):
+      raise ValueError("Invalid email or password")
+    return user
   
   @staticmethod
   def verify_current_password(user, current_password):
     if not isinstance(current_password, str) or not user.verify_password(current_password):
       raise ValueError("current_password_is_incorrect")
+    
+  @staticmethod
+  def validate_pw_strength(password):
+    if not isinstance(password, str) or len(password) < 8:
+      raise ValueError("Password must be at least 8 characters")
   
   @staticmethod
   def change_password(user, current_password, new_password):
     UserService.verify_current_password(user, current_password)
-    validate_pw_strength(new_password)
+    UserService.validate_pw_strength(new_password)
     user.password_hash(new_password)
     return user
   
