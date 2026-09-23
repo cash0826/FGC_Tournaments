@@ -1,7 +1,8 @@
 from config import Config
 from flask import Flask
-from extensions import db, migrate, api
+from extensions import db, migrate, jwt, bcrypt, api
 from models import User, Role, UserRole
+from controllers import Signup, Login, Me, AddUserRoles, DeleteUserRoles
 
 def create_app():
   app = Flask(__name__)
@@ -10,12 +11,17 @@ def create_app():
   # initialize extensions
   db.init_app(app)
   migrate.init_app(app, db)
-  # bcrypt.init_app(app)
-  # jwt.init_app(app)
+  jwt.init_app(app)
+  bcrypt.init_app(app)
   api.init_app(app)
   
   # import resources
-   # TODO: from controllers import Auth
+  api.add_resource(Signup, "/api/signup")
+  api.add_resource(Login, "/api/login")
+  api.add_resource(Me, "/api/me")
+  
+  api.add_resource(AddUserRoles, "api/users/<int:user_id>")
+  api.add_resource(DeleteUserRoles, "api/users/<int:user_id>/<string:role_name")
   
   return app
   

@@ -1,6 +1,7 @@
 # import uuid (?)
 from datetime import datetime, timezone
-from extensions import db
+from extensions import db, bcrypt
+from sqlalchemy.ext.hybrid import hybrid_property
 
 class User(db.Model):
   __tablename__ = "users"
@@ -26,6 +27,21 @@ class User(db.Model):
   
   # TODO: email, username and name validations
   
+  # Password methods
+  @hybrid_property
+  def password_hash(self):
+    raise AttributeError("Password hashes may not be viewed")
+  
+  @password_hash.setter
+  def password_hash(self, password):
+    if not isinstance(password, str) or len(password.strip()) < 8:
+      raise ValueError("Password must be a string of at least 8 characters.")
+    password_hash = bcrypt.generate_password_hash(password.encode('utf-8'))
+    self._password_hash = password_hash.decode('utf-8')
+  
+  def verify_password(self, password):
+    return bcrypt.check_password_hash(self._password_hash, password.encode('utf-8'))
+    
   def to_dict(self):
     return {
       "id": self.id,

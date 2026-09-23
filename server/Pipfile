@@ -8,13 +8,13 @@ flask = "*"
 flask-sqlalchemy = "*"
 flask-restful = "*"
 werkzeug = "*"
-bcrypt = "*"
-pyjwt = "*"
 python-dotenv = "*"
 marshmallow = "*"
 faker = "*"
 pytest = "*"
 flask-migrate = "*"
+flask-jwt-extended = "*"
+flask-bcrypt = "*"
 
 [dev-packages]
 
