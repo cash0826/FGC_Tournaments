@@ -100,5 +100,6 @@ class User(db.Model):
       "email": self.email,
       "first_name": self.first_name,
       "last_name": self.last_name,
+      "gamer_username": self.gamer_username,
       "created_at": self.created_at.isoformat()
     }

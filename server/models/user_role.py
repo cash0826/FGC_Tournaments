@@ -5,7 +5,9 @@ from sqlalchemy.orm import validates
 
 class UserRole(db.Model):
   __tablename__ = "user_roles"
-  __tableargs__ = (db.UniqueConstraint("user_id, role_id", name="uq_user_roles_user_role"),)    
+  __table_args__ = (
+    db.UniqueConstraint("user_id", "role_id", name="uq_user_roles_user_role"),
+  )
   
   id = db.Column(db.Integer, primary_key=True)
   user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
@@ -29,7 +31,7 @@ class UserRole(db.Model):
   
   def to_dict(self):
     return {
-      "user_id": self.user.user_id,
+      "user_id": self.user.id,
       "role": self.role.to_dict(),
       "added_at": self.added_at.isoformat()
     }

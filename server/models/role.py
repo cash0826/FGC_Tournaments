@@ -30,6 +30,7 @@ class Role(db.Model):
   
   def to_dict(self):
     return {
+      "id": self.id,
       "name": self.name,
       "description": self.description,
       "is_system_role": self.is_system_role
