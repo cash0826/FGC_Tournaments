@@ -37,7 +37,7 @@ erDiagram
         string email UK
         string first_name
         string last_name
-        string username UK
+        string gamer_username UK
         string password_hash
         text bio
         string profile_pic_url
@@ -50,6 +50,7 @@ erDiagram
         int id PK
         int user_id FK
         int role_id FK
+        datetime added_at
     }
  
     USER_SOCIAL_ACCOUNT {
