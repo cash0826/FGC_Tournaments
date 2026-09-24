@@ -34,9 +34,15 @@ class User(db.Model):
     "UserRole", back_populates="user", cascade="all, delete-orphan"
   )
   
-  # TODO: User links user_social_accounts
+  # User links user_social_accounts
+  social_accounts = db.relationship(
+    "UserSocialAccount", back_populates="user", cascade="all, delete-orphan"
+  )
   
-  # TODO: User hosts events
+  # User hosts events
+  hosted_events = db.relationship(
+    "Event", back_populates="host", cascade="all, delete-orphan"
+  )
   
   # TODO: User plays as team member
   
@@ -90,6 +96,7 @@ class User(db.Model):
       raise ValueError("Password must be a string of at least 8 characters.")
     password_hash = bcrypt.generate_password_hash(password.encode("utf-8"))
     self._password_hash = password_hash.decode("utf-8")
+    self.password_updated_at = datetime.now(timezone.utc).replace(tzinfo=None, microsecond=0)
   
   def verify_password(self, password):
     return bcrypt.check_password_hash(self._password_hash, password.encode("utf-8"))
