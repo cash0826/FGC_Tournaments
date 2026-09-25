@@ -68,7 +68,7 @@ erDiagram
         boolean in_person
         string location
         text description
-        text tie_breaking_rule
+        text rules
         int host_id FK
     }
  

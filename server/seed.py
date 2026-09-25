@@ -6,6 +6,8 @@ from models import User, Role, UserRole
 import datetime as dt
 fake = Faker()
 
+app = create_app()
+
 with app.app_context():
   db.drop_all()
   db.create_all()
@@ -18,7 +20,7 @@ with app.app_context():
   )
   role_host = Role(
     name="host",
-    description="Creates and manages their own events, including tournaments and user
+    description="Creates and manages their own events, including tournaments and user"
   )
   role_player = Role(
     name="player",
@@ -32,13 +34,15 @@ with app.app_context():
   db.session.add_all([role_admin, role_host, role_player, role_viewer])
   db.session.commit()
   
-  print("Creating test adming account and two host accounts...")
+  print("Creating test admin account and two host accounts...")
   admin = User(email="admin@example.com", first_name="Admin")
-  # TODO: admin.set_password
+  admin.password_hash = "adminpassword"
+  
   host1 = User(email="host1@example.com", first_name="Host_1")
-  # TODO: host1.set_password
+  host1.password_hash = "host1password"
+  
   host2 = User(email="host2@example.com", first_name="Host_2")
-  # TODO: host2.set_password
+  host2.password_hash = "host2password"
   
   db.session.add_all([admin, host1, host2])
   db.session.commit()
@@ -47,16 +51,16 @@ with app.app_context():
   players = []
   for i in range(20):
     first_name = fake.unique.first_name()
-    email = first_name.lower() + "example.com"
+    email = first_name.lower() + "@example.com"
     random_int = fake.random_int(min=101, max=999)
-    gamer_username = f"{name.lower()}{random_int}"
-    password = name.lower() + '123'
+    gamer_username = f"{first_name.lower()}{random_int}"
+    password = first_name.lower() + 'pass123'
     player = User(
       email=email,
       gamer_username=gamer_username,
       first_name=first_name
     )
-    # TODO: player.set_password
+    player.password_hash = password
     players.append(player)
   db.session.add_all(players)
   db.session.commit()
@@ -66,8 +70,8 @@ with app.app_context():
   admin_role = UserRole(user_id=admin.id, role_id=admin_role_lookup.id)   # Assigns admin role
   
   host_role_lookup = Role.query.filter_by(name="host").first()
-  host1_role = UserRole(user_id=host1.id, role_id=host_role_lookup)
-  host2_role = UserRole(user_id=host2.id, role_id=host_role_lookup)   # Assigns host role
+  host1_role = UserRole(user_id=host1.id, role_id=host_role_lookup.id)
+  host2_role = UserRole(user_id=host2.id, role_id=host_role_lookup.id)   # Assigns host role
   
   player_role_lookup = Role.query.filter_by(name="player").first()
   player_roles = []

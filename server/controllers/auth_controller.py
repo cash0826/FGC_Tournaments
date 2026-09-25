@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import get_jwt_identity, create_access_token, jwt_required 
 from services import UserService
 
 def _issue_session(user, status_code):
@@ -12,8 +12,14 @@ def _issue_session(user, status_code):
 
 class Signup(Resource):
   def post(self):
-    pass
-  
+    data = request.get_json() or {}
+    
+    try:
+      user = UserService.signup_user(data)
+    except ValueError as error:
+      return {"error": str(error)}, 400
+    return _issue_session(user, 201)
+    
 class Login(Resource):
   def post(self):
     data = request.get_json() or {}
@@ -32,8 +38,27 @@ class Login(Resource):
     return _issue_session(user, 200)
   
 class Me(Resource):
+  @jwt_required
   def get(self):
-    pass
+    user_id = get_jwt_identity()
+    user = UserService.get_user_by_id(user_id)
+    if not user:
+      return {"error": "User not found."}, 404
+    
+    return {"user": user.to_dict()}, 200
+  
+  @jwt_required
+  def patch(self):
+    user_id = get_jwt_identity()
+    user = UserService.get_user_by_id(user_id)
+    data = request.get_json() or {}
+    
+    try: 
+      updated_user = UserService.update_profile(user_id, data)
+    except ValueError as error:
+      return {"error": str(error)}, 400
+    
+    return {"user": updated_user.to_dict()}
   
 # No Logout Resource. Logout is controlled by the FE. Clear JWT token in the FE.
 """
