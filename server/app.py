@@ -3,6 +3,9 @@ from flask import Flask
 from extensions import db, migrate, jwt, bcrypt, api
 from models import User, Role, UserRole
 from controllers import Signup, Login, Me, AddUserRoles, DeleteUserRoles
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def create_app():
   app = Flask(__name__)
@@ -20,10 +23,12 @@ def create_app():
   api.add_resource(Login, "/api/login")
   api.add_resource(Me, "/api/me")
   
-  api.add_resource(AddUserRoles, "api/users/<int:user_id>")
-  api.add_resource(DeleteUserRoles, "api/users/<int:user_id>/<string:role_name")
+  api.add_resource(AddUserRoles, "/api/users/<int:user_id>")
+  api.add_resource(DeleteUserRoles, "/api/users/<int:user_id>/<string:role_name>")
   
   return app
+  
+app = create_app()
   
 if __name__ == "__main__":
   app = create_app()

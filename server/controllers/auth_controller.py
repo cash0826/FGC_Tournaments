@@ -1,10 +1,11 @@
+from flask import request
 from flask_restful import Resource
 from flask_jwt_extended import get_jwt_identity, create_access_token, jwt_required 
 from services import UserService
 
 def _issue_session(user, status_code):
   # create_access_token returns an encoded access token
-  access_token = create_access_token(identity=user.id)   # expires_delta uses Config value: JWT_ACCESS_TOKEN_EXPIRES
+  access_token = create_access_token(identity=str(user.id))   # expires_delta uses Config value: JWT_ACCESS_TOKEN_EXPIRES
   return {
     "token": access_token,
     "user": user.to_dict()
@@ -38,18 +39,18 @@ class Login(Resource):
     return _issue_session(user, 200)
   
 class Me(Resource):
-  @jwt_required
+  @jwt_required()
   def get(self):
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     user = UserService.get_user_by_id(user_id)
     if not user:
       return {"error": "User not found."}, 404
     
     return {"user": user.to_dict()}, 200
   
-  @jwt_required
+  @jwt_required()
   def patch(self):
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     user = UserService.get_user_by_id(user_id)
     data = request.get_json() or {}
     

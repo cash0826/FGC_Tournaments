@@ -6,14 +6,14 @@ from utils.require import require_admin
 
 class AddUserRoles(Resource):
   
-  @jwt_required
+  @jwt_required()
   @require_admin
   def post(self):
     pass
 
 class DeleteUserRoles(Resource):
   
-  @jwt_required
+  @jwt_required()
   @require_admin
   def delete(self):
     pass

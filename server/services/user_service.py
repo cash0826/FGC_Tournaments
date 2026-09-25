@@ -84,7 +84,7 @@ class UserService:
     
   @staticmethod
   def update_profile(user_id, data):
-    user = User.query.filter_by(id=user_id)
+    user = User.query.filter_by(id=user_id).first()
 
     try:
       for key, value in data.items():
