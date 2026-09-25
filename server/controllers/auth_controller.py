@@ -1,7 +1,7 @@
 from flask import request
 from flask_restful import Resource
 from flask_jwt_extended import get_jwt_identity, create_access_token, jwt_required 
-from services import UserService
+from services import UserService, UserRoleService
 
 def _issue_session(user, status_code):
   # create_access_token returns an encoded access token
@@ -16,10 +16,11 @@ class Signup(Resource):
     data = request.get_json() or {}
     
     try:
-      user = UserService.signup_user(data)
+      new_user = UserService.signup_user(data)
+      viewer_role = UserRoleService.assign_role(new_user.id, "viewer")
     except ValueError as error:
       return {"error": str(error)}, 400
-    return _issue_session(user, 201)
+    return _issue_session(new_user, 201)
     
 class Login(Resource):
   def post(self):
@@ -59,7 +60,7 @@ class Me(Resource):
     except ValueError as error:
       return {"error": str(error)}, 400
     
-    return {"user": updated_user.to_dict()}
+    return {"user": updated_user.to_dict()}, 204
   
 # No Logout Resource. Logout is controlled by the FE. Clear JWT token in the FE.
 """
