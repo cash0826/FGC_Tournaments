@@ -53,11 +53,11 @@ with app.app_context():
     first_name = fake.unique.first_name()
     email = first_name.lower() + "@example.com"
     random_int = fake.random_int(min=101, max=999)
-    gamer_username = f"{first_name.lower()}{random_int}"
+    gamer_name = f"{first_name.lower()}{random_int}"
     password = first_name.lower() + 'pass123'
     player = User(
       email=email,
-      gamer_username=gamer_username,
+      gamer_name=gamer_name,
       first_name=first_name
     )
     player.password_hash = password

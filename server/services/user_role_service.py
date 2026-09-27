@@ -1,11 +1,11 @@
 from extensions import db
-from models import User, Role, UserRole
+from models import Role, UserRole
 
 class UserRoleService:
   
   @staticmethod
   def assign_role(user_id, role_name):
-    role = UserRole.query.filter_by(name=role_name).first()
+    role = Role.query.filter_by(name=role_name).first()
     if not role:
       raise ValueError("Role not found")
     existing = UserRole.query.filter_by(user_id=user_id, role_id=role.id).first()
@@ -19,10 +19,10 @@ class UserRoleService:
       return ur   # Not propogated by controller
     except ValueError as error:
       db.session.rollback()
-      return str(error)
-    except Exception:
+      raise ValueError(str(error)) from error
+    except Exception as error:
       db.session.rollback()
-      return "Invalid data"
+      raise ValueError("Invalid data") from error
     
   @staticmethod
   def remove_role(user_id, role_name):

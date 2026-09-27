@@ -106,7 +106,7 @@ def test_role_persists_and_serializes_all_public_fields(app, session):
 def test_user_persists_and_to_dict_excludes_sensitive_fields(app, session):
     User = model_class("User")
     user = make_user(User, "Player@Example.com")
-    user.gamer_username = "PlayerOne"
+    user.gamer_name = "PlayerOne"
     user.first_name = "Jane"
     user.last_name = "Doe"
     user.contact_number = "+15551234567"
@@ -116,7 +116,7 @@ def test_user_persists_and_to_dict_excludes_sensitive_fields(app, session):
     loaded = session.get(User, user.id)
     serialized = loaded.to_dict()
     assert serialized["email"] == "player@example.com"
-    assert serialized["gamer_username"] == "playerone"
+    assert serialized["gamer_name"] == "playerone"
     assert "password_hash" not in serialized
     assert "_password_hash" not in serialized
     assert "contact_number" not in serialized

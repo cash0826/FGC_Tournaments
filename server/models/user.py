@@ -14,7 +14,7 @@ class User(db.Model):
   _password_hash = db.Column(db.String(255), nullable=False)
   
   # Profile Information
-  gamer_username = db.Column(db.String(50), unique=True, nullable=True, index=True)
+  gamer_name = db.Column(db.String(50), unique=True, nullable=True, index=True)
   first_name = db.Column(db.String(50), nullable=True)
   last_name = db.Column(db.String(50), nullable=True)
   bio = db.Column(db.Text, nullable=True)
@@ -63,7 +63,7 @@ class User(db.Model):
       raise ValueError('Email must have @ in the address')
     return address
   
-  @validates("gamer_username", "first_name", "last_name", "bio")
+  @validates("gamer_name", "first_name", "last_name", "bio")
   def validate_text(self, key, value):
     if not isinstance(value, str):
       raise ValueError(f"{key} must be a string")
@@ -107,6 +107,6 @@ class User(db.Model):
       "email": self.email,
       "first_name": self.first_name,
       "last_name": self.last_name,
-      "gamer_username": self.gamer_username,
+      "gamer_name": self.gamer_name,
       "created_at": self.created_at.isoformat()
     }
