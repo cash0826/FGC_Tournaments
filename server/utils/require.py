@@ -5,6 +5,7 @@ All boillerplate code (wraps).
 from functools import wraps
 from flask_jwt_extended import get_jwt_identity
 from services.user_service import UserService
+from utils.errors import AppError, AuthorizationError
 
 def _current_user_id():
   return get_jwt_identity()
@@ -12,10 +13,13 @@ def _current_user_id():
 def require_admin(f):
   @wraps(f)
   def decorated(*args, **kwargs):
-    roles = UserService.get_roles_for_user(user_id=_current_user_id())
-    if "admin" not in roles:
-      raise ValueError("Unauthorized: Admin role required")
-    return f(*args, **kwargs)
+    try:
+      roles = UserService.get_roles_for_user(user_id=_current_user_id())
+      if "admin" not in roles:
+        raise AuthorizationError("Admin role required")
+      return f(*args, **kwargs)
+    except AppError as error:
+      return {"error": error.message}, error.status_code
 
   return decorated
 
