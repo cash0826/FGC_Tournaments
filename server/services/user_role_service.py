@@ -36,7 +36,7 @@ class UserRoleService:
       raise ValidationError(str(error)) from error
     except Exception as error:
       db.session.rollback()
-      raise AppError("Unable to assign role.", 500) from error
+      raise AppError(f"{error}", 500) from error
 
   @staticmethod
   def remove_role(user_id, role_name):
@@ -63,5 +63,5 @@ class UserRoleService:
       return instance
     except Exception as error:
       db.session.rollback()
-      raise AppError("Unable to remove role.", 500) from error
+      raise AppError(f"{error}", 500) from error
     
