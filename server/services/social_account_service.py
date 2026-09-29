@@ -1,4 +1,5 @@
-from models import UserSocialAccount
+from extensions import db
+from models import UserSocialAccount, Platform
 from .base_service import BaseService
 from utils.errors import NotFoundError, ValidationError
 
@@ -11,7 +12,23 @@ class SocialAccountService(BaseService):
 
   @classmethod
   def create_linked_account(cls, user_id, data):
+    if not isinstance(data, dict):
+      raise ValidationError("Request body must be a JSON object")
+
+    platform_value = data.get("platform")
+    if not isinstance(platform_value, str):
+      raise ValidationError("Platform must be a string")
+    platform = platform_value.strip().lower()
+    if not platform:
+      raise ValidationError("Platform is required")
+
+    try:
+      platform_enum = Platform(platform)
+    except ValueError as error:
+      raise ValidationError(f"{platform} is not a valid platform") from error
+
     data["user_id"] = user_id
+    data["platform"] = platform_enum.name
     return super().create(data)
   
   @classmethod
@@ -21,6 +38,6 @@ class SocialAccountService(BaseService):
     
     instance = SocialAccountService.get_social_accounts_by_platform(platform)
     if not instance:
-      raise NotFoundError("Platform not found")
+      raise NotFoundError(f"{instance} not found")
     
     return super().delete(instance.id)

@@ -153,6 +153,7 @@ def test_user_social_account_persists_through_user_relationship(app, session):
 
     assert session.get(SocialAccount, account.id).user is user
     assert user.social_accounts[0].handle == "player#1234"
+    assert user.social_accounts[0].to_dict()["platform"] == "discord"
 
 
 def test_event_host_and_tournament_game_relationships_persist(app, session):

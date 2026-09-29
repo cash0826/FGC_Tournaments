@@ -1,7 +1,7 @@
 from .role import Role
 from .user import User
 from .user_role import UserRole
-from .user_social_account import UserSocialAccount
+from .user_social_account import UserSocialAccount, Platform
 from .event import Event
 
 __all__ = [
