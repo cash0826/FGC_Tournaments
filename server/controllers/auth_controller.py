@@ -12,6 +12,7 @@ def _issue_session(user, success_code):
     "user": user.to_dict()
   }, success_code
 
+# /signup
 class Signup(Resource):
   def post(self):
     data = request.get_json(silent=True)
@@ -22,7 +23,8 @@ class Signup(Resource):
     except AppError as error:
       return {"error": error.message}, error.status_code
     return _issue_session(new_user, 201)
-    
+
+# /login   
 class Login(Resource):
   def post(self):
     data = request.get_json(silent=True)
@@ -36,15 +38,17 @@ class Login(Resource):
     
     return _issue_session(user, 200)
   
+# /me
 class Me(Resource):
   @jwt_required()
   def get(self):
     user_id = int(get_jwt_identity())
     try:
       user = UserService.get_user_by_id(user_id)
-      return {"user": user.to_dict()}, 200
     except AppError as error:
       return {"error": error.message}, error.status_code
+    
+    return {"user": user.to_dict()}, 200
   
   @jwt_required()
   def patch(self):
@@ -53,10 +57,40 @@ class Me(Resource):
     
     try:
       updated_user = UserService.update_profile(user_id, data)
-      return {"user": updated_user.to_dict()}, 200
     except AppError as error:
       return {"error": error.message}, error.status_code
+    
+    return {"user": updated_user.to_dict()}, 200
   
+  @jwt_required()
+  def delete(self):
+    user_id = int(get_jwt_identity())
+    data = request.get_json(silent=True)
+    
+    try: 
+      user = UserService.get_user_by_id(user_id)
+      AuthService.delete_profile(user, current_password=data.get("current_password"))
+    except AppError as error:
+      return {"error": error.message}, error.status_code
+    
+    return {"message": "Delete Successful"}, 200
+
+# /me/password
+class PasswordUpdate(Resource):
+  @jwt_required()
+  def patch(self):
+    user_id = int(get_jwt_identity())
+    data = request.get_json(silent=True)
+    
+    try: 
+      user = UserService.get_user_by_id(user_id)
+      AuthService.change_password(user, current_password=data.get("current_password"), new_password=("new_password"))
+    except AppError as error:
+      return {"error": error.message}, error.status_code
+    
+    return {"message": "Password updated successfully"}, 200
+  
+
 # No Logout Resource. Logout is controlled by the FE. Clear JWT token in the FE.
 """
 An encoded JWT is made up of a header (Algorithm and Token Type), 

@@ -9,7 +9,6 @@ class AuthService:
   def validate_password_strength(password):
     if not isinstance(password, str) or len(password) < 8:
       raise ValidationError("Password must be a string of at least 8 characters.")
-    return password
   
   @staticmethod
   def create_new_user(data):
@@ -45,7 +44,7 @@ class AuthService:
       raise ConflictError("Email is already registered.") from error
     except Exception as error:
       db.session.rollback()
-      raise AppError("Unable to create user.", 500) from error
+      raise AppError(f"{error}", 500) from error
 
     return user
 
@@ -63,7 +62,6 @@ class AuthService:
     if (not isinstance(current_password, str)
         or not user.verify_password(current_password)):
       raise AuthenticationError("Current password is incorrect.")
-    return True
   
   @staticmethod
   def change_password(user, current_password, new_password):
@@ -77,5 +75,19 @@ class AuthService:
       raise ValidationError(str(error)) from error
     except Exception as error:
       db.session.rollback()
-      raise AppError("Unable to update password.", 500) from error
+      raise AppError(f"{error}", 500) from error
     return user
+  
+  @staticmethod
+  def delete_profile(user, current_password):   # For user to delete their own profile
+    AuthService.verify_current_password(user, current_password)
+    
+    try:
+      db.session.delete(user)
+      db.session.commit()
+    except Exception as error:
+      db.session.rollback()
+      
+      raise AppError(f"{error}", 500) from error
+    
+    

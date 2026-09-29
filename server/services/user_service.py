@@ -61,6 +61,15 @@ class UserService:
       raise ConflictError("A profile value is already in use.") from error
     except Exception as error:
       db.session.rollback()
-      raise AppError("Unable to update profile.", 500) from error
+      raise AppError(f"{error}", 500) from error
     
+  @staticmethod
+  def delete_user(user_id):   # For admin use
+    user = UserService.get_user_by_id(user_id)
+    try:
+      db.session.delete(user)
+      db.session.commit()
+    except Exception as error:
+      db.session.rollback()
+      raise AppError(f"{error}", 500) from error
     
