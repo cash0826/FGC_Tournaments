@@ -84,7 +84,7 @@ class PasswordUpdate(Resource):
     
     try: 
       user = UserService.get_user_by_id(user_id)
-      AuthService.change_password(user, current_password=data.get("current_password"), new_password=("new_password"))
+      AuthService.change_password(user, current_password=data.get("current_password"), new_password=data.get("new_password"))
     except AppError as error:
       return {"error": error.message}, error.status_code
     
