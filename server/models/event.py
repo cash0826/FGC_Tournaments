@@ -25,7 +25,8 @@ class Event(db.Model):
     "User", back_populates="hosted_events", foreign_keys=[host_id]
   )
   
-  # TODO: event contains tournaments
+  # an event contains multiple tournaments
+  tournaments = db.relationship("Tournament", back_populates="event")
   
   # --------------
   # Validations
