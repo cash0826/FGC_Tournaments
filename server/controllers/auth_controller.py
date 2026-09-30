@@ -21,7 +21,7 @@ class Signup(Resource):
       new_user = AuthService.create_new_user(data)
       UserRoleService.assign_role(new_user.id, "viewer")
     except AppError as error:
-      return {"error": error.message}, error.status_code
+      return {"error": str(error)}, error.status_code
     return _issue_session(new_user, 201)
 
 # /login   
@@ -34,7 +34,7 @@ class Login(Resource):
     try: 
       user = AuthService.authenticate_user(data.get("email"), data.get("password"))
     except AppError as error:
-      return {"error": error.message}, error.status_code
+      return {"error": str(error)}, error.status_code
     
     return _issue_session(user, 200)
   
@@ -46,7 +46,7 @@ class Me(Resource):
     try:
       user = UserService.get_user_by_id(user_id)
     except AppError as error:
-      return {"error": error.message}, error.status_code
+      return {"error": str(error)}, error.status_code
     
     return {"user": user.to_dict()}, 200
   
@@ -58,7 +58,7 @@ class Me(Resource):
     try:
       updated_user = UserService.update_profile(user_id, data)
     except AppError as error:
-      return {"error": error.message}, error.status_code
+      return {"error": str(error)}, error.status_code
     
     return {"user": updated_user.to_dict()}, 200
   
@@ -71,7 +71,7 @@ class Me(Resource):
       user = UserService.get_user_by_id(user_id)
       AuthService.delete_profile(user, current_password=data.get("current_password"))
     except AppError as error:
-      return {"error": error.message}, error.status_code
+      return {"error": str(error)}, error.status_code
     
     return {"message": "Delete Successful"}, 200
 
@@ -86,7 +86,7 @@ class PasswordUpdate(Resource):
       user = UserService.get_user_by_id(user_id)
       AuthService.change_password(user, current_password=data.get("current_password"), new_password=data.get("new_password"))
     except AppError as error:
-      return {"error": error.message}, error.status_code
+      return {"error": str(error)}, error.status_code
     
     return {"message": "Password updated successfully"}, 200
   

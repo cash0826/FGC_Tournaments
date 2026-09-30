@@ -14,7 +14,7 @@ class UserSocialAccount(Resource):
     try:
       social_accounts = SocialAccountService.get_all(filters={"user_id": int(user_id)})
     except AppError as error:
-      return {"error": error.message}, error.status_code
+      return {"error": str(error)}, error.status_code
     return [social_account.to_dict() for social_account in social_accounts]
   
   @jwt_required()

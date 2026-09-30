@@ -1,5 +1,5 @@
 """This file exports a decorator function. 
-This function takes in a function as a parameter - Concept is Functional programming
+Decorator functions takes in a function as a parameter - Concept is Functional programming
 All boillerplate code (wraps).
 """
 from functools import wraps
@@ -16,12 +16,25 @@ def require_admin(f):
     try:
       roles = UserService.get_roles_for_user(user_id=_current_user_id())
       if "admin" not in roles:
-        raise AuthorizationError("Admin role required")
+        raise AuthorizationError("Unauthorized: Admin role required")
       return f(*args, **kwargs)
     except AppError as error:
       return {"error": error.message}, error.status_code
 
   return decorated
+
+def require_admin_or_host(f):
+  @wraps(f)
+  def decorated(*args, **kwargs):
+    try:
+      roles = UserService.get_roles_for_user(user_id=_current_user_id())
+      if "admin" not in roles and "host" not in roles:
+        raise AuthorizationError("Permission denied")
+      return f(*args, **kwargs)
+    except AppError as error:
+      return {"error": error.message}, error.status_code
+    
+  return decorated 
 
 """
 The way decorators work is that they are chains.

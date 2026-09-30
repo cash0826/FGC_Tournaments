@@ -7,7 +7,7 @@ class SocialAccountService(BaseService):
   model = UserSocialAccount
   
   @classmethod
-  def get_social_accounts_by_platform(cls, platform):
+  def get_social_accounts_by_platform(cls, platform):   # Searches platform from string instead of id
     return cls.model.query.filter_by(platform=platform).first()
 
   @classmethod
@@ -22,7 +22,7 @@ class SocialAccountService(BaseService):
     if not platform:
       raise ValidationError("Platform is required")
 
-    try:
+    try:    # Checks that input matches one of the Enum object
       platform_enum = Platform(platform)
     except ValueError as error:
       raise ValidationError(f"{platform} is not a valid platform") from error
@@ -36,8 +36,8 @@ class SocialAccountService(BaseService):
     if not isinstance(platform, str) or not platform.strip():
       raise ValidationError("Platform is required")
     
-    instance = SocialAccountService.get_social_accounts_by_platform(platform)
+    instance = SocialAccountService.get_social_accounts_by_platform(platform.strip().upper())
     if not instance:
-      raise NotFoundError(f"{instance} not found")
+      raise NotFoundError(f"{platform} platform account was not found")
     
     return super().delete(instance.id)

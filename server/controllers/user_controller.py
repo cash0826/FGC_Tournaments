@@ -15,7 +15,7 @@ class User(Resource):
     try:
       UserService.delete_user(user_id)
     except AppError as error:
-      return {"error": error.message}, error.status_code
+      return {"error": str(error)}, error.status_code
 
     return {"msg": "Delete Successful"}, 200
     

@@ -19,7 +19,7 @@ class UserRoles(Resource):
     try:
       UserRoleService.assign_role(user_id, data.get("role"))
     except AppError as error:
-      return {"error": error.message}, error.status_code
+      return {"error": str(error)}, error.status_code
 
     updated_roles = UserService.get_roles_for_user(user_id)
     return {"user_id": user_id, "roles": updated_roles}, 200
@@ -34,6 +34,6 @@ class UserRoles(Resource):
     try:
       UserRoleService.remove_role(user_id, data.get("role"))
     except AppError as error:
-      return {"error": error.message}, error.status_code
+      return {"error": str(error)}, error.status_code
 
     return {"msg": "Delete Successful"}, 200
