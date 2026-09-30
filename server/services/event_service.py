@@ -2,6 +2,7 @@ from extensions import db
 from models import Event
 from .base_service import BaseService
 from utils.errors import NotFoundError, ValidationError
+from datetime import datetime
 
 class EventService(BaseService):
   model = Event

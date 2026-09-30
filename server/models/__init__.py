@@ -5,5 +5,6 @@ from .user_social_account import UserSocialAccount, Platform
 from .event import Event
 
 __all__ = [
-  "Role", "User", "UserRole", "UserSocialAccount"
+  "Role", "User", "UserRole", "UserSocialAccount",
+  "Event"
 ]

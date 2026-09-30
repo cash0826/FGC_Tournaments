@@ -1,9 +1,9 @@
 from flask import request
 from flask_restful import Resource
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from services import EventService
 from utils.errors import AppError
-from utils.require import require_admin_or_owner
+from utils.require import require_admin_or_host
 
 # /events
 class EventController(Resource):
@@ -22,7 +22,7 @@ class EventController(Resource):
     user_id = get_jwt_identity()
     
     try:
-      new_event = EventService.create_event(user_id, data)
+      new_event = EventService.create_event(int(user_id), data)
     except AppError as error:
       return {"error": str(error)}, error.status_code
     return new_event.to_dict()
@@ -38,10 +38,12 @@ class EventInstanceController(Resource):
   
   @jwt_required()
   @require_admin_or_host
-  def update(self, event_id):
+  def patch(self, event_id):
     data = request.get_json()
+    user_id = get_jwt_identity()
+    
     event = EventService.get_by_id(event_id)
-    if event.host_id != user_id:
+    if event.host_id != int(user_id):
       return {"error": "Permission denied"}, 403
   
     try:
@@ -55,7 +57,8 @@ class EventInstanceController(Resource):
   @require_admin_or_host
   def delete(self, event_id):
     event = EventService.get_by_id(event_id)
-    if event.host_id != user_id:
+    user_id = get_jwt_identity()
+    if event.host_id != int(user_id):
       return {"error": "Permission denied"}, 403
     
     try:
