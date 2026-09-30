@@ -4,8 +4,9 @@ from .user_role import UserRole
 from .user_social_account import UserSocialAccount, Platform
 from .event import Event
 from .game import Game
+from .tournament import Tournament, GamingPlatform, LineUpTypes
 
 __all__ = [
   "Role", "User", "UserRole", "UserSocialAccount",
-  "Event", "Platform", "Game"
+  "Event", "Platform", "Game", "Tournament", "GamingPlatform", "LineUpTypes"
 ]

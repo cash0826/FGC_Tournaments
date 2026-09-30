@@ -1,9 +1,8 @@
 from config import Config
 from flask import Flask
 from extensions import db, migrate, jwt, bcrypt, api
-from models import User, Role, UserRole
 from controllers import (
-  Signup, Login, Me, PasswordUpdate, UserRoles, User, UserSocialAccount,
+  Signup, Login, Me, PasswordUpdate, UserRoles, UserController, UserSocialAccount,
   EventController, EventInstanceController, GameController, GameInstanceController
 )
 from dotenv import load_dotenv
@@ -31,7 +30,7 @@ def create_app():
   api.add_resource(UserSocialAccount, "/api/me/social_accounts")    # GET / POST / DELETE
   
   # ---- User Management for Admins ----
-  api.add_resource(User, "/api/users/<int:user_id>")   # DELETE (admin resource)
+  api.add_resource(UserController, "/api/users/<int:user_id>")   # DELETE (admin resource)
   api.add_resource(UserRoles, "/api/users/<int:user_id>/roles")   # POST / DELETE (admin resource)
   
   # ---- Events ----
