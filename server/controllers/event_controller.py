@@ -42,11 +42,10 @@ class EventInstanceController(Resource):
     data = request.get_json()
     user_id = get_jwt_identity()
     
-    event = EventService.get_by_id(event_id)
-    if event.host_id != int(user_id):
-      return {"error": "Permission denied"}, 403
-  
     try:
+      event = EventService.get_by_id(event_id)
+      if event.host_id != int(user_id):
+        return {"error": "Permission denied"}, 403
       updated_event = EventService.update_event(event_id, data)
       
     except AppError as error:
@@ -56,12 +55,12 @@ class EventInstanceController(Resource):
   @jwt_required()
   @require_admin_or_host
   def delete(self, event_id):
-    event = EventService.get_by_id(event_id)
     user_id = get_jwt_identity()
-    if event.host_id != int(user_id):
-      return {"error": "Permission denied"}, 403
     
     try:
+      event = EventService.get_by_id(event_id)
+      if event.host_id != int(user_id):
+        return {"error": "Permission denied"}, 403
       delete = EventService.delete(event_id)
     except AppError as error:
       return {"error": str(error)}, error.status_code

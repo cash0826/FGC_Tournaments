@@ -35,22 +35,22 @@ class Event(db.Model):
   def validate_text(self, key, value):
     if not isinstance(value, str):
       raise ValueError(f"{key} must be a string")
-    return value.lower().strip()
+    return value
   
   @validates("host_id")
-  def validates_id(self, key, value):
+  def validate_id(self, key, value):
     if not isinstance(value, int):
       raise ValueError(f"{key} must be an integer")
     return value
 
   @validates("in_person")
-  def validates_in_person(self, key, value):
+  def validate_in_person(self, key, value):
     if not isinstance(value, bool):
       raise ValueError(f"in_person must be an boolean")
     return value
   
   @validates("start", "end")
-  def validates_datetimes(self, key, value):
+  def validate_datetimes(self, key, value):
     if value is None and key == "end":
       return value
     if not isinstance(value, datetime):

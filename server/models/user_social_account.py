@@ -25,7 +25,7 @@ class UserSocialAccount(db.Model):
   
   # Validations
   @validates("user_id")
-  def validates_ids(self, key, value):
+  def validate_id(self, key, value):
     if not isinstance(value, int):
       raise ValueError(f"{key} must be an integer")
     return value
