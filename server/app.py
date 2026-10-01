@@ -3,7 +3,8 @@ from flask import Flask
 from extensions import db, migrate, jwt, bcrypt, api
 from controllers import (
   Signup, Login, Me, PasswordUpdate, UserRoles, UserController, UserSocialAccount,
-  EventController, EventInstanceController, GameController, GameInstanceController
+  EventController, EventInstanceController, GameController, GameInstanceController,
+  TournamentController, TournamentInstanceController
 )
 from dotenv import load_dotenv
 
@@ -40,6 +41,11 @@ def create_app():
   # ---- Games ----
   api.add_resource(GameController, "/api/games")    # GET (ALL) / POST
   api.add_resource(GameInstanceController, "/api/games/<int:game_id>")    # GET / PATCH / DELETE
+  
+  # ---- Tournaments ----
+  api.add_resource(TournamentController, "/api/events/<int:event_id>/tournaments")
+  api.add_resource(TournamentInstanceController, "/api/events/<int:event_id>/tournaments/<int:tournament_id>")
+  
   
   return app
   

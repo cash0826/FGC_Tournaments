@@ -1,4 +1,3 @@
-from extensions import db
 from models import Event
 from .base_service import BaseService
 from utils.errors import NotFoundError, ValidationError

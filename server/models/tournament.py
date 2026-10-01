@@ -10,9 +10,9 @@ class GamingPlatform(Enum):
   OTHER = "OTHER"
   
 class LineUpTypes(Enum):
-  SINGLES = "singles"
-  TEAMS = "teams"
-  OTHER = "other"
+  SINGLES = "SINGLES"
+  TEAMS = "TEAMS"
+  OTHER = "OTHER"
 
 class Tournament(db.Model):
   __tablename__ = "tournaments"
@@ -44,13 +44,14 @@ class Tournament(db.Model):
   # TODO: tournament structures a bracket
   # TODO: tournament ranks the standings
   # TODO: tournament is backed by sponsors
+  # TODO: tournament registers a tournament_competitor
   
   # --------------
   # Validations
   # --------------
   @validates("event_id", "game_id")
   def validate_id(self, key, value):
-    if not isinstance(vale, int):
+    if not isinstance(value, int):
       raise ValueError(f"{key} must be an integer")
     
   @validates("gaming_platform", "line_up_type")

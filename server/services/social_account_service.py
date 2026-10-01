@@ -1,4 +1,3 @@
-from extensions import db
 from models import UserSocialAccount, Platform
 from .base_service import BaseService
 from utils.errors import NotFoundError, ValidationError
