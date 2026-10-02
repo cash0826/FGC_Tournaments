@@ -1,7 +1,7 @@
 from flask import request
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required
-from services import BracketService, EventService
+from services import BracketService
 from utils.errors import AppError
 from utils.require import require_admin_or_host, require_event_ownership_or_admin
 
@@ -22,8 +22,6 @@ class BracketController(Resource):
     
     try:
       require_event_ownership_or_admin(event_id)
-      if event.host_id != int(_current_user_id()) and "admin" not in roles:
-        return {"error": "Permission denied: Requires ownership or higher authorization"}
       new_bracket = BracketService.create(data)
     except AppError as error:
       return {"error": str(error)}, error.status_code

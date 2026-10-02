@@ -1,9 +1,9 @@
 from flask import request
 from flask_restful import Resource
-from flask_jwt_extended import jwt_required, get_jwt_identity
-from services import EventService, UserService
+from flask_jwt_extended import jwt_required
+from services import EventService
 from utils.errors import AppError
-from utils.require import require_admin_or_host
+from utils.require import require_admin_or_host, _current_user_id, require_event_ownership_or_admin
 
 # /events
 class EventController(Resource):
@@ -19,10 +19,9 @@ class EventController(Resource):
   @require_admin_or_host
   def post(self):
     data = request.get_json()
-    user_id = get_jwt_identity()
     
     try:
-      new_event = EventService.create_event(int(user_id), data)
+      new_event = EventService.create_event(int(_current_user_id()), data)
     except AppError as error:
       return {"error": str(error)}, error.status_code
     return new_event.to_dict()
@@ -40,15 +39,10 @@ class EventInstanceController(Resource):
   @require_admin_or_host
   def patch(self, event_id):
     data = request.get_json()
-    user_id = get_jwt_identity()
-    roles = UserService.get_roles_for_user(user_id=int(user_id))
     
     try:
-      event = EventService.get_by_id(event_id)
-      if event.host_id != int(user_id) and "admin" not in roles:
-        return {"error": "Permission denied: Requires event ownership or authorized account"}, 403
+      require_event_ownership_or_admin(event_id)
       updated_event = EventService.update_event(event_id, data)
-      
     except AppError as error:
       return {"error": str(error)}, error.status_code
     return updated_event.to_dict()
@@ -56,13 +50,8 @@ class EventInstanceController(Resource):
   @jwt_required()
   @require_admin_or_host
   def delete(self, event_id):
-    user_id = get_jwt_identity()
-    roles = UserService.get_roles_for_user(user_id=int(user_id))
-    
     try:
-      event = EventService.get_by_id(event_id)
-      if event.host_id != int(user_id) and "admin" not in roles:
-        return {"error": "Permission denied: Requires event ownership or authorized account"}, 403
+      require_event_ownership_or_admin(event_id)
       delete = EventService.delete(event_id)
     except AppError as error:
       return {"error": str(error)}, error.status_code
