@@ -162,14 +162,21 @@ def test_event_host_and_tournament_game_relationships_persist(app, session):
     Game = model_class("Game")
     Tournament = model_class("Tournament")
     host = make_user(User, "host@example.com")
-    game = Game(name="Street Fighter 6", publisher="Capcom", genre="Fighting")
+    game = Game(name="Street Fighter 6", publisher="Capcom", genre="Fighting", slug="SF6")
     event = Event(
         name="Launch Event",
-        start=datetime(2026, 1, 1, tzinfo=timezone.utc),
-        end=datetime(2026, 1, 2, tzinfo=timezone.utc),
+        start=datetime(2028, 1, 1, tzinfo=timezone.utc),
+        end=datetime(2028, 1, 2, tzinfo=timezone.utc),
         host=host,
     )
-    tournament = Tournament(name="Singles", event=event, game=game, line_up_type="singles")
+    tournament = Tournament(
+        name="Singles", 
+        event=event, 
+        game=game, 
+        line_up_type="singles", 
+        start=datetime(2028, 1, 1, tzinfo=timezone.utc),
+        registration_deadline=datetime(2027, 12, 25, tzinfo=timezone.utc)
+    )
     session.add(tournament)
     session.commit()
 
@@ -182,7 +189,12 @@ def test_event_host_and_tournament_game_relationships_persist(app, session):
 def test_bracket_is_one_to_one_with_tournament_and_serializes_url(app, session):
     Tournament = model_class("Tournament")
     Bracket = model_class("Bracket")
-    tournament = Tournament(name="Bracketed", line_up_type="singles")
+    tournament = Tournament(
+        name="Bracketed", 
+        line_up_type="singles",
+        start=datetime(2028, 1, 1, tzinfo=timezone.utc),
+        registration_deadline=datetime(2027, 12, 25, tzinfo=timezone.utc)
+    )
     bracket = Bracket(tournament=tournament, url="https://example.test/bracket/1")
     session.add(bracket)
     session.commit()
@@ -202,7 +214,12 @@ def test_team_membership_and_team_competitor_relationships_persist(app, session)
     Competitor = model_class("TournamentCompetitor")
     user = make_user(User, "team@example.com")
     team = Team(name="Arcade Squad")
-    tournament = Tournament(name="Team Cup", line_up_type="team")
+    tournament = Tournament(
+        name="Team Cup", 
+        line_up_type="team",
+        start=datetime(2028, 1, 1, tzinfo=timezone.utc),
+        registration_deadline=datetime(2027, 12, 25, tzinfo=timezone.utc)
+    )
     member = TeamMember(team=team, user=user, role_on_team="captain")
     competitor = Competitor(team=team, tournament=tournament, seed=1)
     session.add_all([member, competitor])
@@ -216,8 +233,18 @@ def test_team_membership_and_team_competitor_relationships_persist(app, session)
 def test_solo_competitor_requires_user_and_team_competitor_requires_team(app, session):
     Tournament = model_class("Tournament")
     Competitor = model_class("TournamentCompetitor")
-    singles = Tournament(name="Solo Cup", line_up_type="singles")
-    team = Tournament(name="Team Cup", line_up_type="team")
+    singles = Tournament(
+        name="Solo Cup", 
+        line_up_type="singles",
+        start=datetime(2028, 1, 1, tzinfo=timezone.utc),
+        registration_deadline=datetime(2027, 12, 25, tzinfo=timezone.utc)
+    )
+    team = Tournament(
+        name="Team Cup", 
+        line_up_type="team",
+        start=datetime(2028, 1, 1, tzinfo=timezone.utc),
+        registration_deadline=datetime(2027, 12, 25, tzinfo=timezone.utc)
+    )
     session.add_all([singles, team])
     session.flush()
 
@@ -235,8 +262,18 @@ def test_match_references_competitors_and_rejects_winner_outside_the_match(app, 
     Tournament = model_class("Tournament")
     Competitor = model_class("TournamentCompetitor")
     Match = model_class("Match")
-    tournament = Tournament(name="Match Cup", line_up_type="singles")
-    other_tournament = Tournament(name="Other Cup", line_up_type="singles")
+    tournament = Tournament(
+        name="Match Cup", 
+        line_up_type="singles",
+        start=datetime(2028, 1, 1, tzinfo=timezone.utc),
+        registration_deadline=datetime(2027, 12, 25, tzinfo=timezone.utc)
+    )
+    other_tournament = Tournament(
+        name="Other Cup", 
+        line_up_type="singles",
+        start=datetime(2028, 1, 1, tzinfo=timezone.utc),
+        registration_deadline=datetime(2027, 12, 25, tzinfo=timezone.utc)
+    )
     a = Competitor(tournament=tournament, user_id=1)
     b = Competitor(tournament=tournament, user_id=2)
     outsider = Competitor(tournament=other_tournament, user_id=3)
@@ -260,7 +297,12 @@ def test_standing_serializes_competitor_rank_and_points(app, session):
     Tournament = model_class("Tournament")
     Competitor = model_class("TournamentCompetitor")
     Standing = model_class("Standing")
-    tournament = Tournament(name="Ranked Cup", line_up_type="singles")
+    tournament = Tournament(
+        name="Ranked Cup", 
+        line_up_type="singles",
+        start=datetime(2028, 1, 1, tzinfo=timezone.utc),
+        registration_deadline=datetime(2027, 12, 25, tzinfo=timezone.utc)
+    )
     competitor = Competitor(tournament=tournament, user_id=1)
     standing = Standing(tournament_competitor=competitor, points=3, rank=1)
     session.add(standing)
@@ -274,7 +316,12 @@ def test_sponsor_many_to_many_relationship_preserves_sponsorship_attributes(app,
     Tournament = model_class("Tournament")
     Sponsor = model_class("Sponsor")
     TournamentSponsor = model_class("TournamentSponsor")
-    tournament = Tournament(name="Sponsored Cup", line_up_type="singles")
+    tournament = Tournament(
+        name="Sponsored Cup", 
+        line_up_type="singles", 
+        start=datetime(2028, 1, 1, tzinfo=timezone.utc),
+        registration_deadline=datetime(2027, 12, 25, tzinfo=timezone.utc)
+    )
     sponsor = Sponsor(name="Arcade Co.", contact_email="contact@arcade.test")
     sponsorship = TournamentSponsor(
         tournament=tournament,
