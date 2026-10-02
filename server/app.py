@@ -4,7 +4,7 @@ from extensions import db, migrate, jwt, bcrypt, api
 from controllers import (
   Signup, Login, Me, PasswordUpdate, UserRoles, UserController, UserSocialAccount,
   EventController, EventInstanceController, GameController, GameInstanceController,
-  TournamentController, TournamentInstanceController
+  TournamentController, TournamentInstanceController, BracketController
 )
 from dotenv import load_dotenv
 
@@ -31,8 +31,8 @@ def create_app():
   api.add_resource(UserSocialAccount, "/api/me/social_accounts")    # GET / POST / DELETE
   
   # ---- User Management for Admins ----
-  api.add_resource(UserController, "/api/users/<int:user_id>")   # DELETE (admin resource)
-  api.add_resource(UserRoles, "/api/users/<int:user_id>/roles")   # POST / DELETE (admin resource)
+  api.add_resource(UserController, "/api/users/<int:user_id>")   # DELETE user (admin resource)
+  api.add_resource(UserRoles, "/api/users/<int:user_id>/roles")   # POST / DELETE roles (admin resource)
   
   # ---- Events ----
   api.add_resource(EventController, "/api/events")    # GET (ALL) / POST
@@ -46,6 +46,12 @@ def create_app():
   api.add_resource(TournamentController, "/api/events/<int:event_id>/tournaments")
   api.add_resource(TournamentInstanceController, "/api/events/<int:event_id>/tournaments/<int:tournament_id>")
   
+  # ---- Bracket ----
+  api.add_resource(
+    BracketController, 
+    "/api/events/<int:event_id>/tournaments/<int:tournament_id>/bracket",
+    "/api/events/<int:event_id>/tournaments/<int:tournament_id>/bracket/<int:bracket_id>"
+  )
   
   return app
   

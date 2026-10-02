@@ -15,7 +15,7 @@ class BracketController(Resource):
     
     return bracket.to_dict()
   
-  @jwt_required
+  @jwt_required()
   @require_admin_or_host
   def post(self, event_id, tournament_id):
     data = request.get_json()
@@ -27,5 +27,28 @@ class BracketController(Resource):
       return {"error": str(error)}, error.status_code
     
     return new_bracket.to_dict()
-
+  
+  @jwt_required()
+  @require_admin_or_host
+  def patch(self, event_id, tournament_id, bracket_id):
+    data = request.get_json()
+    
+    try:
+      require_event_ownership_or_admin(event_id)
+      updated_bracket = BracketService.update(data)
+    except AppError as error:
+      return {"error": str(error)}, error.status_code
+    
+    return updated_bracket.to_dict()
+  
+  @jwt_required()
+  @require_admin_or_host
+  def delete(self, event_id, tournament_id, bracket_id):
+    try:
+      require_admin_or_host(event_id)
+      delete = BracketService.delete(bracket_id)
+    except AppError as error:
+      return {"error": str(error)}, error.status_code
+    
+    return {"message": "Bracket deleted successfully"}, 200
     
