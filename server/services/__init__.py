@@ -5,8 +5,10 @@ from .social_account_service import SocialAccountService
 from .event_service import EventService
 from .game_service import GameService
 from .tournament_service import TournamentService
+from .bracket_service import BracketService
 
 __all__ = [
   "AuthService", "UserService", "UserRoleService", "SocialAccountService"
-  "EventService", "GameService", "TournamentService"
+  "EventService", "GameService", "TournamentService", "BracketService"
+  
 ]

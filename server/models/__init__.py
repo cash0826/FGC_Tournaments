@@ -5,8 +5,10 @@ from .user_social_account import UserSocialAccount, Platform
 from .event import Event
 from .game import Game
 from .tournament import Tournament, GamingPlatform, LineUpTypes
+from .bracket import Bracket
 
 __all__ = [
   "Role", "User", "UserRole", "UserSocialAccount",
-  "Event", "Platform", "Game", "Tournament", "GamingPlatform", "LineUpTypes"
+  "Event", "Platform", "Game", "Tournament", "GamingPlatform", "LineUpTypes",
+  "Bracket"
 ]
