@@ -14,6 +14,10 @@ class Platform(Enum):
 
 class UserSocialAccount(db.Model):
   __tablename__ = "user_social_accounts"
+  __table_args__ = (
+    db.UniqueConstraint("user_id", "platform", name="uq_user_platforms_user_platform"),
+    db.UniqueConstraint("platform", "handle", name="uq_platform_handles_platform_handle")
+  )
   
   id = db.Column(db.Integer, primary_key=True)
   user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)

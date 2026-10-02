@@ -2,7 +2,7 @@ from random import choice as rc
 from faker import Faker
 from app import create_app
 from extensions import db
-from models import User, Role, UserRole
+from models import User, Role, UserRole, UserSocialAccount, Platform, Event, Game
 import datetime as dt
 fake = Faker()
 
@@ -65,7 +65,7 @@ with app.app_context():
   db.session.add_all(players)
   db.session.commit()
   
-  print("Assigning admin, host and player rolles...")
+  print("Assigning test admin, host and player roles...")
   admin_role_lookup = Role.query.filter_by(name="admin").first()
   admin_role = UserRole(user_id=admin.id, role_id=admin_role_lookup.id)   # Assigns admin role
   
@@ -83,4 +83,52 @@ with app.app_context():
   db.session.add_all(player_roles)
   db.session.commit()
   
+  print("Assigning test social accounts to each user...")
+  social_accounts = []
+  for player in players:
+    ran_platform = rc(["x", "discord", "twitch_tv", "xbox", "steam", "epic_games", "battle.net", "riot_games"])
+    platform_enum = Platform(ran_platform)
+    social_account = UserSocialAccount(user_id=player.id, platform=platform_enum.name, handle=player.gamer_name)
+    social_accounts.append(social_account)
+  db.session.add_all(social_accounts)
+  db.session.commit()
+  
+  print("Creating 10 test events...")
+  events = []
+  for i in range(10):
+    host = rc([host1, host2])
+    name = f"Event{i+1}"
+    start = fake.date_time_between_dates(datetime_start=dt.date(2026, 11, 7), datetime_end=dt.date(2026, 11, 28))
+    end = start + dt.timedelta(days=1)
+    in_person = rc([True, False])
+    location = rc(["San Pedro", "Barreal, Heredia", "Coronado"])
+    description = "Lorem ipsum dolor sit amet consectetur adipiscing elit."
+    rules = "Consectetur adipiscing elit quisque faucibus ex sapien vitae."
+    event = Event(
+      host=host,
+      name=name,
+      start=start,
+      end=end,
+      in_person=in_person,
+      location=location,
+      description=description,
+      rules=rules
+    )
+    events.append(event)
+  db.session.add_all(events)
+  db.session.commit()
+  
+  print("Creating games...")
+  street_fighter_6 = Game(name="Street Fighter 6", slug="SF6")
+  fatal_fury = Game(name="Fatal Fury: City of the Wolves", slug="FFCW")
+  guilty_gear = Game(name="Guilty Gear Strive", slug="GGST")
+  marvel_tokon = Game(name="Marvel Tōkon: Fighting Soul", slug="MTFS")
+  king_of_fighters= Game(name="King of Fighters '98", slug="KOF")
+  granblue_fantasy = Game(name="Granblue Fantasy Versus: Rising", slug="GBFV")
+  
+  db.session.add_all([
+    street_fighter_6, fatal_fury, guilty_gear, marvel_tokon, king_of_fighters, granblue_fantasy
+  ])
+  db.session.commit()
+
   

@@ -6,7 +6,7 @@ class Game(db.Model):
   
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String(50), unique=True, nullable=False, index=True)
-  slug = db.Column(db.String(10), unique=True, index=True)
+  slug = db.Column(db.String(10), unique=True, nullable=False, index=True)
   publisher = db.Column(db.String(50), nullable=True)
   genre = db.Column(db.String(50), nullable=True)
   picture = db.Column(db.String(500), nullable=True)

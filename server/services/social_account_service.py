@@ -1,6 +1,6 @@
 from models import UserSocialAccount, Platform
 from .base_service import BaseService
-from utils.errors import NotFoundError, ValidationError
+from utils.errors import NotFoundError, ValidationError, ConflictError
 
 class SocialAccountService(BaseService):
   model = UserSocialAccount
@@ -20,12 +20,20 @@ class SocialAccountService(BaseService):
     platform = platform_value.strip().lower()
     if not platform:
       raise ValidationError("Platform is required")
-
     try:    # Checks that input matches one of the Enum object
       platform_enum = Platform(platform)
     except ValueError as error:
       raise ValidationError(f"{platform} is not a valid platform") from error
-
+    
+    existing_platform_with_user = UserSocialAccount.query.filter_by(user_id=user_id, platform=platform_enum.name)
+    if existing_platform_with_user:
+      raise ConflictError(f"{platform} is already registered.")
+    
+    handle = data.get("handle")
+    existing_handle_with_platform = UserSocialAccount.query.filter_by(platform=platform_enum.name, handle=handle)
+    if existing_handle_with_platform:
+      raise ConflictError(f"{handle} is already registered in {platform}")
+    
     data["user_id"] = user_id
     data["platform"] = platform_enum.name
     return super().create(data)
