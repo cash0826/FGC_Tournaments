@@ -53,6 +53,7 @@ class Tournament(db.Model):
   def validate_id(self, key, value):
     if not isinstance(value, int):
       raise ValueError(f"{key} must be an integer")
+    return value
     
   @validates("gaming_platform", "line_up_type")
   def validate_enum(self, key, value):

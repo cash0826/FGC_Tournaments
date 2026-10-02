@@ -25,12 +25,12 @@ class SocialAccountService(BaseService):
     except ValueError as error:
       raise ValidationError(f"{platform} is not a valid platform") from error
     
-    existing_platform_with_user = UserSocialAccount.query.filter_by(user_id=user_id, platform=platform_enum.name)
+    existing_platform_with_user = UserSocialAccount.query.filter_by(user_id=user_id, platform=platform_enum.name).first()
     if existing_platform_with_user:
-      raise ConflictError(f"{platform} is already registered.")
+      raise ConflictError(f"{platform} account is already linked.")
     
     handle = data.get("handle")
-    existing_handle_with_platform = UserSocialAccount.query.filter_by(platform=platform_enum.name, handle=handle)
+    existing_handle_with_platform = UserSocialAccount.query.filter_by(platform=platform_enum.name, handle=handle).first()
     if existing_handle_with_platform:
       raise ConflictError(f"{handle} is already registered in {platform}")
     

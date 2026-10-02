@@ -1,7 +1,7 @@
 from flask import request
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from services import TournamentService, EventService
+from services import TournamentService, EventService, UserService
 from utils.errors import AppError
 from utils.require import require_admin_or_host
 
@@ -20,11 +20,12 @@ class TournamentController(Resource):
   def post(self, event_id):
     data = request.get_json()
     user_id = get_jwt_identity()
+    roles = UserService.get_roles_for_user(user_id=int(user_id))
     
     try:
       event = EventService.get_by_id(event_id)
-      if event.host_id != int(user_id):
-        return {"error": "Permission denied"}, 403
+      if event.host_id != int(user_id) and "admin" not in roles:
+        return {"error": "Permission denied: Requires event ownership or authorized account"}, 403
       new_tournament = TournamentService.create_tournament(event_id, data)
     except AppError as error:
       return {"error": str(error)}, error.status_code
@@ -46,11 +47,12 @@ class TournamentInstanceController(Resource):
   def patch(self, event_id, tournament_id):
     data = request.get_json()
     user_id = get_jwt_identity()
+    roles = UserService.get_roles_for_user(user_id=int(user_id))
     
     try:
       event = EventService.get_by_id(event_id)
-      if event.host_id != int(user_id):
-        return {"error": "Permission denied"}, 403
+      if event.host_id != int(user_id) and "admin" not in roles:
+        return {"error": "Permission denied: Requires event ownership or authorized account"}, 403
       updated_tournament = TournamentService.update_tournament(tournament_id, data)
     except AppError as error:
       return {"error": str(error)}, error.status_code
@@ -61,11 +63,12 @@ class TournamentInstanceController(Resource):
   @require_admin_or_host
   def delete(self, event_id, tournament_id):
     user_id = get_jwt_identity()
+    roles = UserService.get_roles_for_user(user_id=int(user_id))
     
     try:
       event = EventService.get_by_id(event_id)
-      if event.host_id != int(user_id):
-        return {"error": "Permission denied"}, 403
+      if event.host_id != int(user_id) and "admin" not in roles:
+        return {"error": "Permission denied: Requires event ownership or authorized account"}, 403
       delete = TournamentService.delete(tournament_id)
     except AppError as error:
       return {"error": str(error)}, error.status_code

@@ -29,7 +29,7 @@ def require_admin_or_host(f):
     try:
       roles = UserService.get_roles_for_user(user_id=_current_user_id())
       if "admin" not in roles and "host" not in roles:
-        raise AuthorizationError("Permission denied")
+        raise AuthorizationError("Permission denied: Requires authorized account")
       return f(*args, **kwargs)
     except AppError as error:
       return {"error": error.message}, error.status_code

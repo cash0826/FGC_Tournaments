@@ -1,7 +1,7 @@
 from flask import request
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from services import EventService
+from services import EventService, UserService
 from utils.errors import AppError
 from utils.require import require_admin_or_host
 
@@ -41,11 +41,12 @@ class EventInstanceController(Resource):
   def patch(self, event_id):
     data = request.get_json()
     user_id = get_jwt_identity()
+    roles = UserService.get_roles_for_user(user_id=int(user_id))
     
     try:
       event = EventService.get_by_id(event_id)
-      if event.host_id != int(user_id):
-        return {"error": "Permission denied"}, 403
+      if event.host_id != int(user_id) and "admin" not in roles:
+        return {"error": "Permission denied: Requires event ownership or authorized account"}, 403
       updated_event = EventService.update_event(event_id, data)
       
     except AppError as error:
@@ -56,11 +57,12 @@ class EventInstanceController(Resource):
   @require_admin_or_host
   def delete(self, event_id):
     user_id = get_jwt_identity()
+    roles = UserService.get_roles_for_user(user_id=int(user_id))
     
     try:
       event = EventService.get_by_id(event_id)
-      if event.host_id != int(user_id):
-        return {"error": "Permission denied"}, 403
+      if event.host_id != int(user_id) and "admin" not in roles:
+        return {"error": "Permission denied: Requires event ownership or authorized account"}, 403
       delete = EventService.delete(event_id)
     except AppError as error:
       return {"error": str(error)}, error.status_code
