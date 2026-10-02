@@ -34,8 +34,9 @@ class SocialAccountService(BaseService):
   def unlink_social(cls, user_id, platform):
     if not isinstance(platform, str) or not platform.strip():
       raise ValidationError("Platform is required")
+    normalized_platform = platform.strip().replace(".", "").upper()   # Checks if there is a period and removes it
     
-    instance = SocialAccountService.get_social_accounts_by_platform(platform.strip().upper())
+    instance = SocialAccountService.get_social_accounts_by_platform(normalized_platform)
     if not instance:
       raise NotFoundError(f"{platform} platform account was not found")
     

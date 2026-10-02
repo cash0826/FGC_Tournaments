@@ -9,13 +9,14 @@ class Game(db.Model):
   slug = db.Column(db.String(10), unique=True, index=True)
   publisher = db.Column(db.String(50), nullable=True)
   genre = db.Column(db.String(50), nullable=True)
+  picture = db.Column(db.String(500), nullable=True)
   
   # a game is featured in a tournament
   tournaments = db.relationship(
     "Tournament", back_populates="game"
   )
   
-  @validates("name", "slug", "publisher", "genre")
+  @validates("name", "slug", "publisher", "genre", "picture")
   def validate_string(self, key, value):
     if not isinstance(value, str):
       raise ValueError(f"{key} must be a string")
