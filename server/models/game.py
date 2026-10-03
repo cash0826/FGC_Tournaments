@@ -13,7 +13,7 @@ class Game(db.Model):
   
   # a game is featured in a tournament
   tournaments = db.relationship(
-    "Tournament", back_populates="game"
+    "Tournament", back_populates="game", cascade='all, delete-orphan'
   )
   
   @validates("name", "slug", "publisher", "genre", "picture")

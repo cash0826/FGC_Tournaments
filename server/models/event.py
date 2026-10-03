@@ -26,7 +26,9 @@ class Event(db.Model):
   )
   
   # an event contains multiple tournaments
-  tournaments = db.relationship("Tournament", back_populates="event")
+  tournaments = db.relationship(
+    "Tournament", back_populates="event", cascade='all, delete-orphan'
+  )
   
   # --------------
   # Validations

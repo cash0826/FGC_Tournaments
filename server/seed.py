@@ -2,7 +2,10 @@ from random import choice as rc
 from faker import Faker
 from app import create_app
 from extensions import db
-from models import User, Role, UserRole, UserSocialAccount, Platform, Event, Game
+from models import (
+  User, Role, UserRole, UserSocialAccount, Platform, 
+  Event, Game, Tournament
+)
 import datetime as dt
 fake = Faker()
 
@@ -130,5 +133,27 @@ with app.app_context():
     street_fighter_6, fatal_fury, guilty_gear, marvel_tokon, king_of_fighters, granblue_fantasy
   ])
   db.session.commit()
+  
+  print("Creating test tournaments...")
+  for i in range(20):
+    event = rc(events)
+    game = rc([street_fighter_6, fatal_fury, guilty_gear, marvel_tokon, king_of_fighters, granblue_fantasy])
+    name = game.name
+    start = event.start
+    registration_deadline = start - dt.timedelta(days=1)
+    gaming_platform = rc(["ps4", "ps5", "ps4_pro"])
+    line_up_type = rc(["singles", "teams"])
+    tournament = Tournament(
+      event=event,
+      game=game,
+      name=name,
+      start=start,
+      registration_deadline=registration_deadline,
+      gaming_platform=gaming_platform,
+      line_up_type=line_up_type
+    )
+    db.session.add(tournament)
+  db.session.commit()
+
 
   
