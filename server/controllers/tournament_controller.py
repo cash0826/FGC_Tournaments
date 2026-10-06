@@ -1,7 +1,7 @@
 from flask import request
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required
-from services import TournamentService, EventService, UserService
+from services import TournamentService
 from utils.errors import AppError
 from utils.require import require_admin_or_host, require_event_ownership_or_admin
 
