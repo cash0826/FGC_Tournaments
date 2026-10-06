@@ -1,7 +1,7 @@
 from flask import request
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required
-from services import BracketService
+from services import BracketService, TournamentService, EventService
 from utils.errors import AppError
 from utils.require import require_admin_or_host, require_event_ownership_or_admin
 
@@ -9,7 +9,7 @@ from utils.require import require_admin_or_host, require_event_ownership_or_admi
 class BracketController(Resource):
   def get(self, event_id, tournament_id):
     try:
-      bracket = BracketService.get_all(filters={"tournament_id": tournament_id})
+      bracket = BracketService.get_bracket(event_id, tournament_id)
     except AppError as error:
       return {"error": str(error)}, error.status_code
     
