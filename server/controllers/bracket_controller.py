@@ -45,7 +45,7 @@ class BracketController(Resource):
   @require_admin_or_host
   def delete(self, event_id, tournament_id, bracket_id):
     try:
-      require_admin_or_host(event_id)
+      require_event_ownership_or_admin(event_id)
       delete = BracketService.delete(bracket_id)
     except AppError as error:
       return {"error": str(error)}, error.status_code

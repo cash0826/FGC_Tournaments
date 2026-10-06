@@ -4,7 +4,7 @@ from app import create_app
 from extensions import db
 from models import (
   User, Role, UserRole, UserSocialAccount, Platform, 
-  Event, Game, Tournament
+  Event, Game, Tournament, Bracket
 )
 import datetime as dt
 fake = Faker()
@@ -135,25 +135,34 @@ with app.app_context():
   db.session.commit()
   
   print("Creating test tournaments...")
-  for i in range(20):
-    event = rc(events)
-    game = rc([street_fighter_6, fatal_fury, guilty_gear, marvel_tokon, king_of_fighters, granblue_fantasy])
-    name = game.name
-    start = event.start
-    registration_deadline = start - dt.timedelta(days=1)
-    gaming_platform = rc(["ps4", "ps5", "ps4_pro"])
-    line_up_type = rc(["singles", "teams"])
-    tournament = Tournament(
-      event=event,
-      game=game,
-      name=name,
-      start=start,
-      registration_deadline=registration_deadline,
-      gaming_platform=gaming_platform,
-      line_up_type=line_up_type
-    )
-    db.session.add(tournament)
+  tournaments = []
+  for event in events:
+    random_int = fake.random_int(min=1, max=4)
+    for i in range(random_int):
+      game = rc([street_fighter_6, fatal_fury, guilty_gear, marvel_tokon, king_of_fighters, granblue_fantasy])
+      name = game.name
+      start = event.start
+      registration_deadline = start - dt.timedelta(days=1)
+      gaming_platform = rc(["ps4", "ps5", "ps4_pro"])
+      line_up_type = rc(["singles", "teams"])
+      tournament = Tournament(
+        event=event,
+        game=game,
+        name=name,
+        start=start,
+        registration_deadline=registration_deadline,
+        gaming_platform=gaming_platform,
+        line_up_type=line_up_type
+      )
+      tournaments.append(tournament)
+      db.session.add(tournament)
   db.session.commit()
 
+  print("Creating one bracket per tournament...")
+  brackets = []
+  for tournament in tournaments:
+    bracket = Bracket(tournament=tournament, url=f"https://brackentology.com/{tournament.id}")
+    brackets.append(bracket)
+    db.session.add(bracket)
+  db.session.commit()
 
-  

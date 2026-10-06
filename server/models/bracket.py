@@ -4,10 +4,10 @@ from sqlalchemy.orm import validates
 # One to One (only 1 bracket x tournament)
 
 class Bracket(db.Model):
-  __tablename__ = "bracket"
+  __tablename__ = "brackets"
   
   id = db.Column(db.Integer, primary_key=True)
-  tournament_id = db.Column(db.Integer, db.ForeignKey("tournaments.id"), nullable=False)
+  tournament_id = db.Column(db.Integer, db.ForeignKey("tournaments.id"), unique=True, nullable=False)
   url = db.Column(db.Text)
   
   # bracket is scheduled by (belongs to) tournament

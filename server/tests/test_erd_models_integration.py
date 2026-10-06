@@ -8,7 +8,6 @@ import pytest
 from datetime import datetime, timezone
 from importlib import import_module
 
-import pytest
 from sqlalchemy import inspect
 from sqlalchemy.exc import IntegrityError
 
@@ -187,10 +186,23 @@ def test_event_host_and_tournament_game_relationships_persist(app, session):
 
 
 def test_bracket_is_one_to_one_with_tournament_and_serializes_url(app, session):
+    User = model_class("User")
+    Event = model_class("Event")
+    Game = model_class("Game")
+    host = make_user(User, "host@example.com")
+    game = Game(name="Street Fighter 6", publisher="Capcom", genre="Fighting", slug="SF6")
+    event = Event(
+        name="Launch Event",
+        start=datetime(2028, 1, 1, tzinfo=timezone.utc),
+        end=datetime(2028, 1, 2, tzinfo=timezone.utc),
+        host=host,
+    )
     Tournament = model_class("Tournament")
     Bracket = model_class("Bracket")
     tournament = Tournament(
         name="Bracketed", 
+        event=event,
+        game=game,
         line_up_type="singles",
         start=datetime(2028, 1, 1, tzinfo=timezone.utc),
         registration_deadline=datetime(2027, 12, 25, tzinfo=timezone.utc)
@@ -201,7 +213,7 @@ def test_bracket_is_one_to_one_with_tournament_and_serializes_url(app, session):
 
     assert session.get(Bracket, bracket.id).tournament is tournament
     assert bracket.to_dict()["url"] == "https://example.test/bracket/1"
-    session.add(Bracket(tournament=tournament, url="https://example.test/bracket/2"))
+    session.add(Bracket(tournament_id=tournament.id, url="https://example.test/bracket/2"))
     with pytest.raises(IntegrityError):
         session.commit()
 
