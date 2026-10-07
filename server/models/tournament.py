@@ -41,11 +41,19 @@ class Tournament(db.Model):
   )
   
   # TODO: tournament schedules matches
-  # TODO: tournament structures a bracket
-  bracket = db.relationship("Bracket", uselist=False, back_populates="tournament")
+  
+  # tournament structures a bracket
+  bracket = db.relationship(
+    "Bracket", uselist=False, back_populates="tournament", cascade="all, delete-orphan"
+    )
+  
   # TODO: tournament ranks the standings
   # TODO: tournament is backed by sponsors
-  # TODO: tournament registers a tournament_competitor
+  
+  # TODO: tournament registers a tournament_competitor / has (many) competitors
+  competitors = db.relationship(
+    "TournamentCompetitor", back_populates="tournament", cascade="all, delete-orphan"
+  )
   
   # --------------
   # Validations

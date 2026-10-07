@@ -15,7 +15,10 @@ class Team(db.Model):
     "TeamMember", back_populates="team", cascade="all, delete-orphan"
   )
   
-  # TODO: One team enters as a tournament_competitor
+  # Teams enter(team) tournament_competitor. Delete-orphan omitted in case standings need to be retained
+  team_tournaments = db.relationship(
+    "TournamentCompetitor", back_populates="team"
+  )
   
   @validates("name")
   def validates_name(self, key, value):

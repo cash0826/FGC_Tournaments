@@ -4,7 +4,8 @@ from extensions import db, migrate, jwt, bcrypt, api
 from controllers import (
   Signup, Login, Me, PasswordUpdate, UserRoles, UserController, UserSocialAccount,
   EventController, EventInstanceController, GameController, GameInstanceController,
-  TournamentController, TournamentInstanceController, BracketController, BracketInstanceController,
+  TournamentController, TournamentInstanceController, TournamentCompetitorController,
+  BracketController, BracketInstanceController,
   TeamController, TeamMemberController, MyTeamsController
 )
 from dotenv import load_dotenv
@@ -44,17 +45,18 @@ def create_app():
   api.add_resource(GameInstanceController, "/api/games/<int:game_id>")    # GET / PATCH / DELETE
   
   # ---- Tournaments ----
-  api.add_resource(TournamentController, "/api/events/<int:event_id>/tournaments")
-  api.add_resource(TournamentInstanceController, "/api/events/<int:event_id>/tournaments/<int:tournament_id>")
+  api.add_resource(TournamentController, "/api/events/<int:event_id>/tournaments")    # GET / POST
+  api.add_resource(TournamentInstanceController, "/api/events/<int:event_id>/tournaments/<int:tournament_id>")    # GET / PATCH / DELETE
+  api.add_resource(TournamentCompetitorController, "/api/events/<int:event_id>/tournaments/<int:tournament_id>/competitors")    # POST / DELETE
   
   # ---- Bracket ----
-  api.add_resource(BracketController,"/api/events/<int:event_id>/tournaments/<int:tournament_id>/bracket")
-  api.add_resource(BracketInstanceController, "/api/events/<int:event_id>/tournaments/<int:tournament_id>/bracket/<int:bracket_id>")
+  api.add_resource(BracketController,"/api/events/<int:event_id>/tournaments/<int:tournament_id>/bracket")    # GET / POST
+  api.add_resource(BracketInstanceController, "/api/events/<int:event_id>/tournaments/<int:tournament_id>/bracket/<int:bracket_id>")    # GET / PATCH / DELETE
   
   # ---- Teams ----
-  api.add_resource(TeamController, "/api/teams")
-  api.add_resource(TeamMemberController, "/api/teams/<int:team_id>")
-  api.add_resource(MyTeamsController, "/api/me/teams")
+  api.add_resource(TeamController, "/api/teams")    # POST / DELETE
+  api.add_resource(TeamMemberController, "/api/teams/<int:team_id>")    # POST / DELETE (members) 
+  api.add_resource(MyTeamsController, "/api/me/teams")    # GET
   
   return app
   

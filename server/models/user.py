@@ -44,12 +44,15 @@ class User(db.Model):
     "Event", back_populates="host", cascade="all, delete-orphan"
   )
   
-  # TODO: User plays as team member
+  # User plays as team member
   user_teams = db.relationship(
     "TeamMember", back_populates="user", cascade="all, delete-orphan"
   )
   
-  # TODO: User enters(solo) tournament competitor
+  # User enters(solo) tournament competitor. Delete-orphan omitted in case standings need to be retained
+  solo_tournaments = db.relationship(
+    "TournamentCompetitor", back_populates="user"
+  )
   
   # --------------
   # Validations

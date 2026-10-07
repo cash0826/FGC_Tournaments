@@ -8,9 +8,10 @@ from .tournament import Tournament, GamingPlatform, LineUpTypes
 from .bracket import Bracket
 from .team import Team
 from .team_member import TeamMember, TeamRole
+from .tournament_competitor import TournamentCompetitor
 
 __all__ = [
   "Role", "User", "UserRole", "UserSocialAccount",
   "Event", "Platform", "Game", "Tournament", "GamingPlatform", "LineUpTypes",
-  "Bracket", "Team", "TeamMember", "TeamRole"
+  "Bracket", "Team", "TeamMember", "TeamRole", "TournamentCompetitor"
 ]
