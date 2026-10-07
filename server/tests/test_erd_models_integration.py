@@ -220,14 +220,27 @@ def test_bracket_is_one_to_one_with_tournament_and_serializes_url(app, session):
 
 def test_team_membership_and_team_competitor_relationships_persist(app, session):
     User = model_class("User")
+    Event = model_class("Event")
+    Game = model_class("Game")
     Team = model_class("Team")
     TeamMember = model_class("TeamMember")
     Tournament = model_class("Tournament")
     Competitor = model_class("TournamentCompetitor")
+    
+    host = make_user(User, "host@example.com")
     user = make_user(User, "team@example.com")
+    event = Event(
+        name="Launch Event",
+        start=datetime(2028, 1, 1, tzinfo=timezone.utc),
+        end=datetime(2028, 1, 2, tzinfo=timezone.utc),
+        host=host,
+    )
+    game = Game(name="Street Fighter 6", publisher="Capcom", genre="Fighting", slug="SF6")
     team = Team(name="Arcade Squad")
     tournament = Tournament(
         name="Team Cup", 
+        event=event,
+        game=game, 
         line_up_type="team",
         start=datetime(2028, 1, 1, tzinfo=timezone.utc),
         registration_deadline=datetime(2027, 12, 25, tzinfo=timezone.utc)
@@ -243,16 +256,32 @@ def test_team_membership_and_team_competitor_relationships_persist(app, session)
 
 
 def test_solo_competitor_requires_user_and_team_competitor_requires_team(app, session):
+    User = model_class("User")
+    Event = model_class("Event")
+    Game = model_class("Game")
     Tournament = model_class("Tournament")
     Competitor = model_class("TournamentCompetitor")
+    
+    host = make_user(User, "host@example.com")
+    event = Event(
+        name="Launch Event",
+        start=datetime(2028, 1, 1, tzinfo=timezone.utc),
+        end=datetime(2028, 1, 2, tzinfo=timezone.utc),
+        host=host,
+    )
+    game = Game(name="Street Fighter 6", publisher="Capcom", genre="Fighting", slug="SF6")
     singles = Tournament(
-        name="Solo Cup", 
+        name="Solo Cup",
+        event=event,
+        game=game, 
         line_up_type="singles",
         start=datetime(2028, 1, 1, tzinfo=timezone.utc),
         registration_deadline=datetime(2027, 12, 25, tzinfo=timezone.utc)
     )
     team = Tournament(
         name="Team Cup", 
+        event=event,
+        game=game, 
         line_up_type="team",
         start=datetime(2028, 1, 1, tzinfo=timezone.utc),
         registration_deadline=datetime(2027, 12, 25, tzinfo=timezone.utc)

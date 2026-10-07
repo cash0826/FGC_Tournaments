@@ -11,7 +11,7 @@ class GamingPlatform(Enum):
   
 class LineUpTypes(Enum):
   SINGLES = "SINGLES"
-  TEAMS = "TEAMS"
+  TEAM = "TEAM"
   OTHER = "OTHER"
 
 class Tournament(db.Model):
