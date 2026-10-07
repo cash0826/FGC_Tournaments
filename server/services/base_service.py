@@ -13,7 +13,7 @@ class BaseService:
   def get_by_id(cls, instance_id):
     instance = cls.model.query.filter_by(id=instance_id).first()
     if not instance:
-      raise NotFoundError(f"{model} not found.")    # Trying with model, otherwise try instance_id
+      raise NotFoundError(f"{cls.model.__name__} not found.")
     return instance
   
   @classmethod

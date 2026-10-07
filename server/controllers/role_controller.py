@@ -18,10 +18,10 @@ class UserRoles(Resource):
 
     try:
       UserRoleService.assign_role(user_id, data.get("role"))
+      updated_roles = UserService.get_roles_for_user(user_id)
     except AppError as error:
       return {"error": str(error)}, error.status_code
-
-    updated_roles = UserService.get_roles_for_user(user_id)
+    
     return {"user_id": user_id, "roles": updated_roles}, 200
 
   @jwt_required()
@@ -36,4 +36,4 @@ class UserRoles(Resource):
     except AppError as error:
       return {"error": str(error)}, error.status_code
 
-    return {"msg": "Delete Successful"}, 200
+    return {"message": "Role removed from user successfully"}, 200

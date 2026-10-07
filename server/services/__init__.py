@@ -7,9 +7,10 @@ from .game_service import GameService
 from .tournament_service import TournamentService
 from .bracket_service import BracketService
 from .team_service import TeamService
+from .team_member_service import TeamMemberService
 
 __all__ = [
   "AuthService", "UserService", "UserRoleService", "SocialAccountService",
   "EventService", "GameService", "TournamentService", "BracketService",
-  "TeamService"
+  "TeamService", "TeamMemberService"
 ]

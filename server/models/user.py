@@ -45,6 +45,9 @@ class User(db.Model):
   )
   
   # TODO: User plays as team member
+  user_teams = db.relationship(
+    "TeamMember", back_populates="user", cascade="all, delete-orphan"
+  )
   
   # TODO: User enters(solo) tournament competitor
   

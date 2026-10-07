@@ -10,7 +10,12 @@ class Team(db.Model):
   logo_url = db.Column(db.String, nullable=True)
   created_at = db.Column(db.DateTime, default=db.func.now())
   
-  # TODO: Teams are composed of team_members
+  # Teams are composed of team_members
+  members = db.relationship(
+    "TeamMember", back_populates="team", cascade="all, delete-orphan"
+  )
+  
+  # TODO: One team enters as a tournament_competitor
   
   @validates("name")
   def validates_name(self, key, value):
