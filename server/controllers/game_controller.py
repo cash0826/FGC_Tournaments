@@ -13,19 +13,21 @@ class GameController(Resource):
     except AppError as error:
       return {"error": str(error)}, error.status_code
     
-    return [game.to_dict() for game in games]
+    return [game.to_dict() for game in games], 200
   
   @jwt_required()
   @require_admin
   def post(self):
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+      return {"error": "Request body must be a JSON object."}, 400
     
     try:
       new_game = GameService.create(data)
     except AppError as error:
       return {"error": str(error)}, error.status_code
     
-    return new_game.to_dict()
+    return new_game.to_dict(), 201
   
 # /games/<int:game_id>
 class GameInstanceController(Resource):
@@ -34,18 +36,20 @@ class GameInstanceController(Resource):
       game = GameService.get_by_id(game_id)
     except AppError as error:
       return {"error": str(error)}, error.status_code
-    return game.to_dict()
+    return game.to_dict(), 200
   
-  @jwt_required
+  @jwt_required()
   @require_admin
   def patch(self, game_id):
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+      return {"error": "Request body must be a JSON object."}, 400
     
     try:
-      updated_game = GameService.update(game_id)
+      updated_game = GameService.update(game_id, data)
     except AppError as error:
       return {"error": str(error)}, error.status_code
-    return updated_game.to_dict()
+    return updated_game.to_dict(), 201
   
   @jwt_required()
   @require_admin

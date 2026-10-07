@@ -13,12 +13,14 @@ class TournamentController(Resource):
     except AppError as error:
       return {"error": str(error)}, error.status_code
     
-    return [tournament.to_dict() for tournament in tournaments]
+    return [tournament.to_dict() for tournament in tournaments], 200
     
   @jwt_required()
   @require_admin_or_host
   def post(self, event_id):
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+      return {"error": "Request body must be a JSON object."}, 400
     
     try:
       require_event_ownership_or_admin(event_id)
@@ -26,7 +28,7 @@ class TournamentController(Resource):
     except AppError as error:
       return {"error": str(error)}, error.status_code
     
-    return new_tournament.to_dict()  
+    return new_tournament.to_dict(), 201
     
 # /events/<event_id>/tournaments/<tournament_id>
 class TournamentInstanceController(Resource):
@@ -36,12 +38,14 @@ class TournamentInstanceController(Resource):
     except AppError as error:
       return {"error": str(error)}, error.status_code
     
-    return tournament.to_dict()
+    return tournament.to_dict(), 200
   
   @jwt_required()
   @require_admin_or_host
   def patch(self, event_id, tournament_id):
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+      return {"error": "Request body must be a JSON object."}, 400
     
     try:
       require_event_ownership_or_admin(event_id)
@@ -49,7 +53,7 @@ class TournamentInstanceController(Resource):
     except AppError as error:
       return {"error": str(error)}, error.status_code
     
-    return updated_tournament.to_dict()
+    return updated_tournament.to_dict(), 200
   
   @jwt_required()
   @require_admin_or_host

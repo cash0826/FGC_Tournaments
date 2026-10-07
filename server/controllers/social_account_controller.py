@@ -14,21 +14,25 @@ class UserSocialAccount(Resource):
       social_accounts = SocialAccountService.get_all(filters={"user_id": int(_current_user_id())})
     except AppError as error:
       return {"error": str(error)}, error.status_code
-    return [social_account.to_dict() for social_account in social_accounts]
+    return [social_account.to_dict() for social_account in social_accounts], 200
   
   @jwt_required()
   def post(self):
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+      return {"error": "Request body must be a JSON object."}, 400
     
     try:
       new_social = SocialAccountService.create_linked_account(user_id=int(_current_user_id()), data=data)
     except AppError as error:
       return {"error": str(error)}, error.status_code
-    return new_social.to_dict()
+    return new_social.to_dict(), 201
   
   @jwt_required()
   def delete(self):
     data = request.get_json()
+    if not isinstance(data, dict):
+      return {"error": "Request body must be a JSON object."}, 400
     platform = data.get("platform")
     
     try:

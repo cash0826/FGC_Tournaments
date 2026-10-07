@@ -4,8 +4,8 @@ from extensions import db, migrate, jwt, bcrypt, api
 from controllers import (
   Signup, Login, Me, PasswordUpdate, UserRoles, UserController, UserSocialAccount,
   EventController, EventInstanceController, GameController, GameInstanceController,
-  TournamentController, TournamentInstanceController, BracketController, TeamController,
-  TeamMemberController, MyTeamsController
+  TournamentController, TournamentInstanceController, BracketController, BracketInstanceController,
+  TeamController, TeamMemberController, MyTeamsController
 )
 from dotenv import load_dotenv
 
@@ -48,11 +48,8 @@ def create_app():
   api.add_resource(TournamentInstanceController, "/api/events/<int:event_id>/tournaments/<int:tournament_id>")
   
   # ---- Bracket ----
-  api.add_resource(
-    BracketController, 
-    "/api/events/<int:event_id>/tournaments/<int:tournament_id>/bracket",
-    "/api/events/<int:event_id>/tournaments/<int:tournament_id>/bracket/<int:bracket_id>"
-  )
+  api.add_resource(BracketController,"/api/events/<int:event_id>/tournaments/<int:tournament_id>/bracket")
+  api.add_resource(BracketInstanceController, "/api/events/<int:event_id>/tournaments/<int:tournament_id>/bracket/<int:bracket_id>")
   
   # ---- Teams ----
   api.add_resource(TeamController, "/api/teams")

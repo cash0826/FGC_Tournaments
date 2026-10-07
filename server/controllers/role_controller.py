@@ -22,7 +22,7 @@ class UserRoles(Resource):
     except AppError as error:
       return {"error": str(error)}, error.status_code
     
-    return {"user_id": user_id, "roles": updated_roles}, 200
+    return {"user_id": user_id, "roles": updated_roles}, 201
 
   @jwt_required()
   @require_admin

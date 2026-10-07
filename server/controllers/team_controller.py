@@ -36,13 +36,15 @@ class TeamMemberController(Resource):
   @jwt_required()
   def post(self, team_id):
     data = request.get_json(silent=True)   # user_id, role_on_team
+    if not isinstance(data, dict):
+      return {"error": "Request body must be a JSON object."}, 400
     
     try:
       new_team_member = TeamMemberService.add_team_member(team_id, data)
     except AppError as error:
       return {"error": str(error)}, error.status_code
     
-    return new_team_member.to_dict(), 200
+    return new_team_member.to_dict(), 201
   
   @jwt_required()
   def delete(self, team_id):

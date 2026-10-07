@@ -13,18 +13,20 @@ class EventController(Resource):
     except AppError as error:
       return {"error": str(error)}, error.status_code
     
-    return [event.to_dict() for event in events]
+    return [event.to_dict() for event in events], 200
   
   @jwt_required()
   @require_admin_or_host
   def post(self):
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+      return {"error": "Request body must be a JSON object."}, 400
     
     try:
       new_event = EventService.create_event(int(_current_user_id()), data)
     except AppError as error:
       return {"error": str(error)}, error.status_code
-    return new_event.to_dict()
+    return new_event.to_dict(), 201
   
 # /events/<event_id>
 class EventInstanceController(Resource):
@@ -33,19 +35,21 @@ class EventInstanceController(Resource):
       event = EventService.get_by_id(event_id)
     except AppError as error:
       return {"error": str(error)}, error.status_code
-    return event.to_dict()
+    return event.to_dict(), 200
   
   @jwt_required()
   @require_admin_or_host
   def patch(self, event_id):
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+      return {"error": "Request body must be a JSON object."}, 400
     
     try:
       require_event_ownership_or_admin(event_id)
       updated_event = EventService.update_event(event_id, data)
     except AppError as error:
       return {"error": str(error)}, error.status_code
-    return updated_event.to_dict()
+    return updated_event.to_dict(), 200
   
   @jwt_required()
   @require_admin_or_host

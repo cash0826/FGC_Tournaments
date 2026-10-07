@@ -16,6 +16,8 @@ def _issue_session(user, success_code):
 class Signup(Resource):
   def post(self):
     data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+      return {"error": "Request body must be a JSON object."}, 400
     
     try:
       new_user = AuthService.create_new_user(data)
@@ -54,6 +56,8 @@ class Me(Resource):
   def patch(self):
     user_id = int(get_jwt_identity())
     data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+      return {"error": "Request body must be a JSON object."}, 400
     
     try:
       updated_user = UserService.update_profile(user_id, data)
@@ -66,6 +70,8 @@ class Me(Resource):
   def delete(self):
     user_id = int(get_jwt_identity())
     data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+      return {"error": "Request body must be a JSON object."}, 400
     
     try: 
       user = UserService.get_user_by_id(user_id)
@@ -81,6 +87,8 @@ class PasswordUpdate(Resource):
   def patch(self):
     user_id = int(get_jwt_identity())
     data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+      return {"error": "Request body must be a JSON object."}, 400
     
     try: 
       user = UserService.get_user_by_id(user_id)

@@ -5,12 +5,13 @@ from .social_account_controller import UserSocialAccount
 from .event_controller import EventController, EventInstanceController
 from .game_controller import GameController, GameInstanceController
 from .tournament_controller import TournamentController, TournamentInstanceController
-from .bracket_controller import BracketController
+from .bracket_controller import BracketController, BracketInstanceController
 from .team_controller import TeamController, TeamMemberController, MyTeamsController
 
 __all__ = [
   "Signup", "Login", "Me", "UserRoles", "PasswordUpdate", "UserController", "UserSocialAccount",
   "EventController", "EventInstanceController", "GameController", "GameInstanceController",
-  "TournamentController", "TournamentInstanceController", "BracketController", "TeamController",
+  "TournamentController", "TournamentInstanceController", "BracketController",
+  "BracketInstanceController", "TeamController",
   "TeamMemberController", "MyTeamsController"
 ]
