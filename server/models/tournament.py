@@ -30,22 +30,25 @@ class Tournament(db.Model):
   # Relationships
   # --------------
   
-  # tournament belongs to a single event
+  # tournament belongs (contains) to a single event
   event = db.relationship(
     "Event", back_populates="tournaments", foreign_keys=[event_id]
   )
   
-  # tournament hosts a single game
+  # tournament belongs (features) a single game
   game = db.relationship(
     "Game", back_populates="tournaments", foreign_keys=[game_id]
   )
-  
-  # TODO: tournament schedules matches
   
   # tournament structures a bracket
   bracket = db.relationship(
     "Bracket", uselist=False, back_populates="tournament", cascade="all, delete-orphan"
     )
+  
+  # tournament schedules many matches
+  matches = db.relationship(
+    "Match", back_populates="tournament", cascade="all, delete-orphan"
+  )
   
   # TODO: tournament ranks the standings
   # TODO: tournament is backed by sponsors

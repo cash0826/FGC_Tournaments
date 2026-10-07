@@ -8,7 +8,7 @@ import pytest
 from datetime import datetime, timezone
 from importlib import import_module
 
-from sqlalchemy import inspect
+from sqlalchemy import inspect, text
 from sqlalchemy.exc import IntegrityError
 
 from extensions import db
@@ -57,6 +57,24 @@ def make_user(User, email):
     return user
 
 
+def make_tournament(Tournament, Event, Game, User, name):
+    host = make_user(User, f"{name.lower().replace(' ', '-')}@example.com")
+    event = Event(
+        name=f"{name} Event",
+        start=datetime(2028, 1, 1, tzinfo=timezone.utc),
+        host=host,
+    )
+    game = Game(name=f"{name} Game", slug=name.lower().replace(" ", "-"))
+    return Tournament(
+        name=name,
+        event=event,
+        game=game,
+        line_up_type="singles",
+        start=datetime(2028, 1, 1, tzinfo=timezone.utc),
+        registration_deadline=datetime(2027, 12, 25, tzinfo=timezone.utc),
+    )
+
+
 @pytest.fixture
 def app():
     from flask import Flask
@@ -69,6 +87,21 @@ def app():
     )
     db.init_app(application)
     with application.app_context():
+        for entity_name in (
+            "Role",
+            "User",
+            "UserRole",
+            "UserSocialAccount",
+            "Event",
+            "Game",
+            "Tournament",
+            "Bracket",
+            "Team",
+            "TeamMember",
+            "TournamentCompetitor",
+            "Match",
+        ):
+            model_class(entity_name)
         db.create_all()
         yield application
         db.session.remove()
@@ -300,25 +333,17 @@ def test_solo_competitor_requires_user_and_team_competitor_requires_team(app, se
 
 
 def test_match_references_competitors_and_rejects_winner_outside_the_match(app, session):
+    User = model_class("User")
+    Event = model_class("Event")
+    Game = model_class("Game")
     Tournament = model_class("Tournament")
     Competitor = model_class("TournamentCompetitor")
     Match = model_class("Match")
-    tournament = Tournament(
-        name="Match Cup", 
-        line_up_type="singles",
-        start=datetime(2028, 1, 1, tzinfo=timezone.utc),
-        registration_deadline=datetime(2027, 12, 25, tzinfo=timezone.utc)
-    )
-    other_tournament = Tournament(
-        name="Other Cup", 
-        line_up_type="singles",
-        start=datetime(2028, 1, 1, tzinfo=timezone.utc),
-        registration_deadline=datetime(2027, 12, 25, tzinfo=timezone.utc)
-    )
+    tournament = make_tournament(Tournament, Event, Game, User, "Match Cup")
     a = Competitor(tournament=tournament, user_id=1)
     b = Competitor(tournament=tournament, user_id=2)
-    outsider = Competitor(tournament=other_tournament, user_id=3)
-    session.add_all([tournament, other_tournament, a, b, outsider])
+    outsider = Competitor(tournament=tournament, user_id=3)
+    session.add_all([tournament, a, b, outsider])
     session.flush()
 
     match = Match(
@@ -332,6 +357,63 @@ def test_match_references_competitors_and_rejects_winner_outside_the_match(app, 
     session.add(match)
     with pytest.raises((IntegrityError, ValueError)):
         session.commit()
+
+
+def test_match_competitors_must_belong_to_its_tournament(app, session):
+    User = model_class("User")
+    Event = model_class("Event")
+    Game = model_class("Game")
+    Tournament = model_class("Tournament")
+    Competitor = model_class("TournamentCompetitor")
+    Match = model_class("Match")
+    tournament = make_tournament(Tournament, Event, Game, User, "Match Cup")
+    other_tournament = make_tournament(Tournament, Event, Game, User, "Other Cup")
+    player_a = make_user(User, "match-player-a@example.com")
+    player_b = make_user(User, "match-player-b@example.com")
+    a = Competitor(tournament=tournament, user=player_a)
+    outsider = Competitor(tournament=other_tournament, user=player_b)
+    session.execute(text("PRAGMA foreign_keys=ON"))
+    session.add_all([tournament, other_tournament, a, outsider])
+    session.flush()
+
+    session.add(
+        Match(
+            tournament_id=tournament.id,
+            round="final",
+            competitor_a_id=a.id,
+            competitor_b_id=outsider.id,
+        )
+    )
+    with pytest.raises(IntegrityError):
+        session.commit()
+
+
+def test_tournament_competitor_exposes_reverse_match_relationships(app, session):
+    User = model_class("User")
+    Event = model_class("Event")
+    Game = model_class("Game")
+    Tournament = model_class("Tournament")
+    Competitor = model_class("TournamentCompetitor")
+    Match = model_class("Match")
+    tournament = make_tournament(Tournament, Event, Game, User, "Match Cup")
+    a = Competitor(tournament=tournament, user_id=1)
+    b = Competitor(tournament=tournament, user_id=2)
+    session.add_all([tournament, a, b])
+    session.flush()
+
+    match = Match(
+        tournament=tournament,
+        round="final",
+        competitor_a=a,
+        competitor_b=b,
+        winner=a,
+    )
+    session.add(match)
+    session.flush()
+
+    assert match in a.matches_as_competitor_a
+    assert match in b.matches_as_competitor_b
+    assert match in a.matches_won
 
 
 def test_standing_serializes_competitor_rank_and_points(app, session):

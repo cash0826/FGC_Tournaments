@@ -11,6 +11,7 @@ class TournamentCompetitor(db.Model):
       "(team_id IS NULL AND user_id IS NOT NULL)",
       name="ck_tournament_competitors_exactly_one_entry",
     ),
+    db.UniqueConstraint("id", "tournament_id", name="uq_tournament_competitors_id_tournament"),
   )
   
   id = db.Column(db.Integer, primary_key=True)
@@ -32,6 +33,17 @@ class TournamentCompetitor(db.Model):
   # tournament_competitor is assigned to a user (or team)
   user = db.relationship(
     "User", back_populates="solo_tournaments", foreign_keys=[user_id]
+  )
+
+  # Matches where this competitor appears or wins
+  matches_as_competitor_a = db.relationship(
+    "Match", back_populates="competitor_a", foreign_keys="Match.competitor_a_id"
+  )
+  matches_as_competitor_b = db.relationship(
+    "Match", back_populates="competitor_b", foreign_keys="Match.competitor_b_id"
+  )
+  matches_won = db.relationship(
+    "Match", back_populates="winner", foreign_keys="Match.winner_id"
   )
   
   @validates("tournament_id", "team_id", "user_id")
