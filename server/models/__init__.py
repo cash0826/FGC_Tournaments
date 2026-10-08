@@ -10,10 +10,11 @@ from .team import Team
 from .team_member import TeamMember, TeamRole
 from .tournament_competitor import TournamentCompetitor
 from .match import Match, MatchStatuses
+from .standing import Standing
 
 __all__ = [
   "Role", "User", "UserRole", "UserSocialAccount",
   "Event", "Platform", "Game", "Tournament", "GamingPlatform", "LineUpTypes",
   "Bracket", "Team", "TeamMember", "TeamRole", "TournamentCompetitor",
-  "Match", "MatchStatuses"
+  "Match", "MatchStatuses", "Standing"
 ]

@@ -65,31 +65,3 @@ class TournamentInstanceController(Resource):
       return {"error": str(error)}, error.status_code
     
     return {"message": "Tournament deleted successfully"}, 200
-
-# /events/<event_id>/tournaments/<tournament_id>/competitors
-class TournamentCompetitorController(Resource):
-  @jwt_required()
-  def post(self, event_id, tournament_id):
-    data = request.get_json()
-    if not isinstance(data, dict):
-      return {"error": "Request body must be a JSON object."}, 400
-    
-    try:
-      new_competitor = TournamentCompetitorService.add_competitor(event_id, tournament_id, data)
-    except AppError as error:
-      return {"error": str(error)}, error.status_code
-    
-    return new_competitor.to_dict(), 201
-  
-  @jwt_required()
-  def delete(self, event_id, tournament_id):
-    data = request.get_json()   # competitor to be deleted from tournament
-    
-    if not isinstance(data, dict):
-      return {"error": "Request body must be a JSON object."}, 400
-    try:
-      TournamentCompetitorService.remove_competitor(event_id, tournament_id, data)
-    except AppError as error:
-      return {"error": str(error)}, error.status_code
-    
-    return {"message": "Competitor removed from tournament successfully"}, 200

@@ -10,10 +10,11 @@ from .team_service import TeamService
 from .team_member_service import TeamMemberService
 from .t_competitor_service import TournamentCompetitorService
 from .match_service import MatchService
+from .standing_service import StandingService
 
 __all__ = [
   "AuthService", "UserService", "UserRoleService", "SocialAccountService",
   "EventService", "GameService", "TournamentService", "BracketService",
   "TeamService", "TeamMemberService", "TournamentCompetitorService", 
-  "MatchService"
+  "MatchService", "StandingService"
 ]

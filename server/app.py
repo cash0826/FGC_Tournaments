@@ -4,7 +4,8 @@ from extensions import db, migrate, jwt, bcrypt, api
 from controllers import (
   Signup, Login, Me, PasswordUpdate, UserRoles, UserController, UserSocialAccount,
   EventController, EventInstanceController, GameController, GameInstanceController,
-  TournamentController, TournamentInstanceController, TournamentCompetitorController,
+  TournamentController, TournamentInstanceController,
+  CompetitorController, CompetitorStandingController
   BracketController, BracketInstanceController,
   TeamController, TeamMemberController, MyTeamsController,
   MatchController
@@ -48,7 +49,9 @@ def create_app():
   # ---- Tournaments ----
   api.add_resource(TournamentController, "/api/events/<int:event_id>/tournaments")    # GET / POST
   api.add_resource(TournamentInstanceController, "/api/events/<int:event_id>/tournaments/<int:tournament_id>")    # GET / PATCH / DELETE
-  api.add_resource(TournamentCompetitorController, "/api/events/<int:event_id>/tournaments/<int:tournament_id>/competitors")    # POST / DELETE
+  
+  # ---- Competitor ---- [can refer to team or user]
+  api.add_resource(CompetitorController, "/api/events/<int:event_id>/tournaments/<int:tournament_id>/competitors")    # POST / DELETE
   
   # ---- Bracket ----
   api.add_resource(BracketController,"/api/events/<int:event_id>/tournaments/<int:tournament_id>/bracket")    # GET / POST

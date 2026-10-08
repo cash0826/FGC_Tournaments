@@ -45,6 +45,13 @@ class TournamentCompetitor(db.Model):
   matches_won = db.relationship(
     "Match", back_populates="winner", foreign_keys="Match.winner_id"
   )
+
+  standings_in_tournaments = db.relationship(
+    "Standing",
+    back_populates="tournament_competitor",
+    foreign_keys="Standing.tournament_competitor_id",
+    cascade="all, delete-orphan",
+  )
   
   @validates("tournament_id", "team_id", "user_id")
   def validates_ids(self, key, value):

@@ -1,5 +1,6 @@
 from extensions import db
 from sqlalchemy.exc import IntegrityError
+from models import Tournament
 from utils.errors import AppError, ConflictError, NotFoundError, ValidationError
 
 """Assist with CRUD boilerplate code
@@ -8,6 +9,21 @@ Controllers call: [].create, [].get_by_id(), [].get_all(), [].update(), and [].d
 
 class BaseService:
   model = None    # Subclasses must set this
+
+  @classmethod
+  def _get_tournament(cls, event_id, tournament_id):
+    if not isinstance(event_id, int) or isinstance(event_id, bool) or event_id < 1:
+      raise ValidationError("Event id must be a positive integer.")
+    if (not isinstance(tournament_id, int) or isinstance(tournament_id, bool)
+        or tournament_id < 1):
+      raise ValidationError("Tournament id must be a positive integer.")
+
+    tournament = Tournament.query.filter_by(
+      id=tournament_id, event_id=event_id
+    ).first()
+    if not tournament:
+      raise NotFoundError("Tournament not found for this event.")
+    return tournament
   
   @classmethod
   def get_by_id(cls, instance_id):

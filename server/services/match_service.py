@@ -1,27 +1,12 @@
 from datetime import datetime
 
-from models import Match, MatchStatuses, Tournament, TournamentCompetitor
+from models import Match, MatchStatuses, TournamentCompetitor
 from .base_service import BaseService
 from utils.errors import NotFoundError, ValidationError
 
 
 class MatchService(BaseService):
   model = Match
-
-  @classmethod
-  def _get_tournament(cls, event_id, tournament_id):
-    if not isinstance(event_id, int) or isinstance(event_id, bool) or event_id < 1:
-      raise ValidationError("Event id must be a positive integer.")
-    if (not isinstance(tournament_id, int) or isinstance(tournament_id, bool)
-        or tournament_id < 1):
-      raise ValidationError("Tournament id must be a positive integer.")
-
-    tournament = Tournament.query.filter_by(
-      id=tournament_id, event_id=event_id
-    ).first()
-    if not tournament:
-      raise NotFoundError("Tournament not found for this event.")
-    return tournament
 
   @classmethod
   def _get_match(cls, event_id, tournament_id, match_id):
