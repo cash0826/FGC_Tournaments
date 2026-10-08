@@ -6,7 +6,8 @@ from controllers import (
   EventController, EventInstanceController, GameController, GameInstanceController,
   TournamentController, TournamentInstanceController, TournamentCompetitorController,
   BracketController, BracketInstanceController,
-  TeamController, TeamMemberController, MyTeamsController
+  TeamController, TeamMemberController, MyTeamsController,
+  MatchController
 )
 from dotenv import load_dotenv
 
@@ -57,6 +58,9 @@ def create_app():
   api.add_resource(TeamController, "/api/teams")    # POST / DELETE
   api.add_resource(TeamMemberController, "/api/teams/<int:team_id>")    # POST / DELETE (members) 
   api.add_resource(MyTeamsController, "/api/me/teams")    # GET
+  
+  # ---- Matches ----
+  api.add_resource(MatchController, "/api/events/<int:event_id>/tournaments/<int:tournament_id>/matches")   # Full CRUD
   
   return app
   

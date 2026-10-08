@@ -9,9 +9,11 @@ from .bracket import Bracket
 from .team import Team
 from .team_member import TeamMember, TeamRole
 from .tournament_competitor import TournamentCompetitor
+from .match import Match, MatchStatuses
 
 __all__ = [
   "Role", "User", "UserRole", "UserSocialAccount",
   "Event", "Platform", "Game", "Tournament", "GamingPlatform", "LineUpTypes",
-  "Bracket", "Team", "TeamMember", "TeamRole", "TournamentCompetitor"
+  "Bracket", "Team", "TeamMember", "TeamRole", "TournamentCompetitor",
+  "Match", "MatchStatuses"
 ]
