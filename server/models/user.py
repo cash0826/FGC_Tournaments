@@ -66,7 +66,7 @@ class User(db.Model):
     if not address:
       raise ValueError("Email cannot be empty")
     if '@' not in address:
-      raise ValueError('Email must have @ in the address')
+      raise ValueError('Email must be a valid format with @ in the address')
     return address
   
   @validates("gamer_name", "first_name", "last_name", "bio")

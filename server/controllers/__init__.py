@@ -9,6 +9,7 @@ from .competitor_controller import CompetitorController, UpdateCompetitorStandin
 from .bracket_controller import BracketController, BracketInstanceController
 from .team_controller import TeamController, TeamMemberController, MyTeamsController
 from .match_controller import MatchController
+from .sponsor_controller import SponsorController
 
 
 __all__ = [
@@ -19,5 +20,5 @@ __all__ = [
   "CompetitorController", "UpdateCompetitorStanding",
   "BracketController", "BracketInstanceController", 
   "TeamController", "TeamMemberController", "MyTeamsController",
-  "MatchController"
+  "MatchController", "SponsorController"
 ]

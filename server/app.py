@@ -8,7 +8,7 @@ from controllers import (
   CompetitorController, UpdateCompetitorStanding,
   BracketController, BracketInstanceController,
   TeamController, TeamMemberController, MyTeamsController,
-  MatchController
+  MatchController, SponsorController
 )
 from dotenv import load_dotenv
 
@@ -38,13 +38,21 @@ def create_app():
   api.add_resource(UserController, "/api/users/<int:user_id>")   # DELETE user (admin resource)
   api.add_resource(UserRoles, "/api/users/<int:user_id>/roles")   # POST / DELETE roles (admin resource)
   
-  # ---- Events ----
-  api.add_resource(EventController, "/api/events")    # GET (ALL) / POST
-  api.add_resource(EventInstanceController, "/api/events/<int:event_id>")   # GET / PATCH / DELETE
-  
   # ---- Games ----
   api.add_resource(GameController, "/api/games")    # GET (ALL) / POST
   api.add_resource(GameInstanceController, "/api/games/<int:game_id>")    # GET / PATCH / DELETE
+  
+  # ---- Teams ----
+  api.add_resource(TeamController, "/api/teams")    # POST / DELETE
+  api.add_resource(TeamMemberController, "/api/teams/<int:team_id>")    # POST / DELETE (members) 
+  api.add_resource(MyTeamsController, "/api/me/teams")    # GET
+  
+  # ---- Sponsors ----
+  api.add_resource(SponsorController, "/api/sponsors")    # Full CRUD
+  
+  # ---- Events ----
+  api.add_resource(EventController, "/api/events")    # GET (ALL) / POST
+  api.add_resource(EventInstanceController, "/api/events/<int:event_id>")   # GET / PATCH / DELETE
   
   # ---- Tournaments ----
   api.add_resource(TournamentController, "/api/events/<int:event_id>/tournaments")    # GET / POST
@@ -57,11 +65,6 @@ def create_app():
   # ---- Bracket ----
   api.add_resource(BracketController,"/api/events/<int:event_id>/tournaments/<int:tournament_id>/bracket")    # GET / POST
   api.add_resource(BracketInstanceController, "/api/events/<int:event_id>/tournaments/<int:tournament_id>/bracket/<int:bracket_id>")    # GET / PATCH / DELETE
-  
-  # ---- Teams ----
-  api.add_resource(TeamController, "/api/teams")    # POST / DELETE
-  api.add_resource(TeamMemberController, "/api/teams/<int:team_id>")    # POST / DELETE (members) 
-  api.add_resource(MyTeamsController, "/api/me/teams")    # GET
   
   # ---- Matches ----
   api.add_resource(MatchController, "/api/events/<int:event_id>/tournaments/<int:tournament_id>/matches")   # Full CRUD

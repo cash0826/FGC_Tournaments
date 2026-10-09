@@ -13,7 +13,7 @@ class CompetitorController(Resource):
     except AppError as error:
       return {"error": str(error)}, error.status_code
     
-    return competitor_standings
+    return competitor_standings, 200
   
   @jwt_required()
   def post(self, event_id, tournament_id):
@@ -57,4 +57,4 @@ class UpdateCompetitorStanding(Resource):
     except AppError as error:
       return {"error": str(error)}, error.status_code
     
-    return updated_standing.to_dict()
+    return updated_standing.to_dict(), 200
