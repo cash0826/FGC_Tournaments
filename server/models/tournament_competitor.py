@@ -46,11 +46,14 @@ class TournamentCompetitor(db.Model):
     "Match", back_populates="winner", foreign_keys="Match.winner_id"
   )
 
-  standings_in_tournaments = db.relationship(
+  # One to One relationship: one standing per competitor in a tournament. 
+  # Competitors are unique in tournaments. Teams/Users can repeat in different tournaments
+  standing = db.relationship(
     "Standing",
     back_populates="tournament_competitor",
     foreign_keys="Standing.tournament_competitor_id",
     cascade="all, delete-orphan",
+    uselist=False
   )
   
   @validates("tournament_id", "team_id", "user_id")

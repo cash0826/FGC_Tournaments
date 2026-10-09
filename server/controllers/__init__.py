@@ -5,7 +5,7 @@ from .social_account_controller import UserSocialAccount
 from .event_controller import EventController, EventInstanceController
 from .game_controller import GameController, GameInstanceController
 from .tournament_controller import TournamentController, TournamentInstanceController
-from .competitor_controller import CompetitorController, CompetitorStandingController
+from .competitor_controller import CompetitorController, UpdateCompetitorStanding
 from .bracket_controller import BracketController, BracketInstanceController
 from .team_controller import TeamController, TeamMemberController, MyTeamsController
 from .match_controller import MatchController
@@ -16,7 +16,7 @@ __all__ = [
   "EventController", "EventInstanceController", 
   "GameController", "GameInstanceController",
   "TournamentController", "TournamentInstanceController", 
-  "CompetitorController", "CompetitorStandingController",
+  "CompetitorController", "UpdateCompetitorStanding",
   "BracketController", "BracketInstanceController", 
   "TeamController", "TeamMemberController", "MyTeamsController",
   "MatchController"

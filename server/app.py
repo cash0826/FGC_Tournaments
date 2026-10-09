@@ -5,7 +5,7 @@ from controllers import (
   Signup, Login, Me, PasswordUpdate, UserRoles, UserController, UserSocialAccount,
   EventController, EventInstanceController, GameController, GameInstanceController,
   TournamentController, TournamentInstanceController,
-  CompetitorController, CompetitorStandingController
+  CompetitorController, UpdateCompetitorStanding,
   BracketController, BracketInstanceController,
   TeamController, TeamMemberController, MyTeamsController,
   MatchController
@@ -50,8 +50,9 @@ def create_app():
   api.add_resource(TournamentController, "/api/events/<int:event_id>/tournaments")    # GET / POST
   api.add_resource(TournamentInstanceController, "/api/events/<int:event_id>/tournaments/<int:tournament_id>")    # GET / PATCH / DELETE
   
-  # ---- Competitor ---- [can refer to team or user]
-  api.add_resource(CompetitorController, "/api/events/<int:event_id>/tournaments/<int:tournament_id>/competitors")    # POST / DELETE
+  # ---- Competitors ---- [can refer to team or user]
+  api.add_resource(CompetitorController, "/api/events/<int:event_id>/tournaments/<int:tournament_id>/competitors")    # GET / POST / DELETE
+  api.add_resource(UpdateCompetitorStanding, "/api/events/<int:event_id>/tournaments/<int:tournament_id>/competitors/<int:competitor_id>")    # PATCH
   
   # ---- Bracket ----
   api.add_resource(BracketController,"/api/events/<int:event_id>/tournaments/<int:tournament_id>/bracket")    # GET / POST

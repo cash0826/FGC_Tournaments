@@ -417,15 +417,13 @@ def test_tournament_competitor_exposes_reverse_match_relationships(app, session)
 
 
 def test_standing_serializes_competitor_rank_and_points(app, session):
+    User = model_class("User")
+    Event = model_class("Event")
+    Game = model_class("Game") 
     Tournament = model_class("Tournament")
     Competitor = model_class("TournamentCompetitor")
     Standing = model_class("Standing")
-    tournament = Tournament(
-        name="Ranked Cup", 
-        line_up_type="singles",
-        start=datetime(2028, 1, 1, tzinfo=timezone.utc),
-        registration_deadline=datetime(2027, 12, 25, tzinfo=timezone.utc)
-    )
+    tournament = make_tournament(Tournament, Event, Game, User, "Ranked Cup")
     competitor = Competitor(tournament=tournament, user_id=1)
     standing = Standing(tournament_competitor=competitor, points=3, rank=1)
     session.add(standing)
@@ -436,15 +434,13 @@ def test_standing_serializes_competitor_rank_and_points(app, session):
 
 
 def test_sponsor_many_to_many_relationship_preserves_sponsorship_attributes(app, session):
+    User = model_class("User")
+    Event = model_class("Event")
+    Game = model_class("Game") 
     Tournament = model_class("Tournament")
     Sponsor = model_class("Sponsor")
     TournamentSponsor = model_class("TournamentSponsor")
-    tournament = Tournament(
-        name="Sponsored Cup", 
-        line_up_type="singles", 
-        start=datetime(2028, 1, 1, tzinfo=timezone.utc),
-        registration_deadline=datetime(2027, 12, 25, tzinfo=timezone.utc)
-    )
+    tournament = make_tournament(Tournament, Event, Game, User, "Sponsored Cup")
     sponsor = Sponsor(name="Arcade Co.", contact_email="contact@arcade.test")
     sponsorship = TournamentSponsor(
         tournament=tournament,

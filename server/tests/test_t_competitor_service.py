@@ -2,10 +2,11 @@ from datetime import datetime
 
 import pytest
 from flask import Flask
+from sqlalchemy.exc import IntegrityError
 
 from extensions import db
-from models import Event, Game, Team, Tournament, User
-from services import TournamentCompetitorService
+from models import Event, Game, Standing, Team, Tournament, TournamentCompetitor, User
+from services import StandingService, TournamentCompetitorService
 from utils.errors import ValidationError
 
 
@@ -29,7 +30,7 @@ def app():
 def competitor_context(app):
     host = User(email="competitor-host@example.com")
     host.password_hash = "correct horse battery staple"
-    user = User(email="competitor-player@example.com")
+    user = User(email="competitor-player@example.com", gamer_name="Test Player")
     user.password_hash = "correct horse battery staple"
     game = Game(name="Test Game", slug="competitor-test-game")
     event = Event(
@@ -130,3 +131,96 @@ def test_add_competitor_rejects_entry_incompatible_with_lineup_type(
         TournamentCompetitorService.add_competitor(
             tournament.event_id, tournament.id, data
         )
+
+
+def test_get_all_returns_team_names_and_standings(competitor_context):
+    _, tournament, _, team, _ = competitor_context
+    competitor = TournamentCompetitorService.add_competitor(
+        tournament.event_id, tournament.id, {"team_id": team.id}
+    )
+    standing = competitor.standing
+    standing.points = 3
+    standing.rank = 1
+    db.session.commit()
+
+    competitors = StandingService.get_all(tournament.event_id, tournament.id)
+
+    assert competitors == [
+        {
+            "tournament_id": tournament.id,
+            "team_id": team.id,
+            "user_id": None,
+            "seed": None,
+            "id": competitor.id,
+            "team_name": team.name,
+            "standing": standing.to_dict(),
+        }
+    ]
+
+
+def test_get_all_returns_gamer_names_and_standings(competitor_context):
+    tournament, _, _, _, user = competitor_context
+    competitor = TournamentCompetitorService.add_competitor(
+        tournament.event_id, tournament.id, {"user_id": user.id}
+    )
+    standing = competitor.standing
+    standing.points = 5
+    standing.rank = 2
+    db.session.commit()
+
+    competitors = StandingService.get_all(tournament.event_id, tournament.id)
+
+    assert competitors == [
+        {
+            "tournament_id": tournament.id,
+            "team_id": None,
+            "user_id": user.id,
+            "seed": None,
+            "id": competitor.id,
+            "gamer_name": user.gamer_name,
+            "standing": standing.to_dict(),
+        }
+    ]
+
+
+def test_get_all_rejects_unsupported_lineup_type(competitor_context):
+    _, _, tournament, _, _ = competitor_context
+
+    with pytest.raises(ValidationError, match="does not support competitors"):
+        StandingService.get_all(tournament.event_id, tournament.id)
+
+
+def test_add_competitor_creates_initial_standing(competitor_context):
+    tournament, _, _, _, user = competitor_context
+    competitor = TournamentCompetitorService.add_competitor(
+        tournament.event_id, tournament.id, {"user_id": user.id}
+    )
+
+    competitors = StandingService.get_all(tournament.event_id, tournament.id)
+
+    assert competitors[0]["gamer_name"] == user.gamer_name
+    assert competitors[0]["standing"]["tournament_competitor_id"] == competitor.id
+    assert competitors[0]["standing"]["points"] is None
+    assert competitors[0]["standing"]["rank"] is None
+
+
+def test_standing_is_unique_per_competitor(competitor_context):
+    tournament, _, _, _, user = competitor_context
+    competitor = TournamentCompetitorService.add_competitor(
+        tournament.event_id, tournament.id, {"user_id": user.id}
+    )
+    duplicate_standing = Standing(tournament_competitor=competitor)
+    db.session.add(duplicate_standing)
+
+    with pytest.raises(IntegrityError):
+        db.session.commit()
+    db.session.rollback()
+
+
+@pytest.mark.parametrize(
+    ("event_id", "tournament_id"),
+    [(True, 1), (1, False), (0, 1), (1, 0)],
+)
+def test_get_all_validates_ids(competitor_context, event_id, tournament_id):
+    with pytest.raises(ValidationError):
+        StandingService.get_all(event_id, tournament_id)

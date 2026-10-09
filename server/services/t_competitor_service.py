@@ -1,6 +1,9 @@
+from extensions import db
 from models import LineUpTypes, TournamentCompetitor
 from .base_service import BaseService
-from utils.errors import NotFoundError, ValidationError
+from .standing_service import StandingService
+from sqlalchemy.exc import IntegrityError
+from utils.errors import AppError, ConflictError, NotFoundError, ValidationError
 
 class TournamentCompetitorService(BaseService):
   model = TournamentCompetitor
@@ -52,7 +55,25 @@ class TournamentCompetitorService(BaseService):
     }
     if "seed" in data:
       competitor_data["seed"] = data["seed"]
-    return super().create(competitor_data)
+    try:
+      competitor = cls.model(**competitor_data)
+      db.session.add(competitor)
+      StandingService.add_for_competitor(competitor)
+      db.session.commit()
+    except AppError:
+      db.session.rollback()
+      raise
+    except IntegrityError as error:
+      db.session.rollback()
+      raise ConflictError(f"{error}") from error
+    except ValueError as error:
+      db.session.rollback()
+      raise ValidationError(str(error)) from error
+    except Exception as error:
+      db.session.rollback()
+      raise AppError(f"{error}", 500) from error
+
+    return competitor
   
   @classmethod
   def remove_competitor(cls, event_id, tournament_id, data):
