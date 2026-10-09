@@ -12,10 +12,11 @@ from .t_competitor_service import TournamentCompetitorService
 from .match_service import MatchService
 from .standing_service import StandingService
 from .sponsor_service import SponsorService
+from .event_sponsor_service import EventSponsorService
 
 __all__ = [
   "AuthService", "UserService", "UserRoleService", "SocialAccountService",
   "EventService", "GameService", "TournamentService", "BracketService",
   "TeamService", "TeamMemberService", "TournamentCompetitorService", 
-  "MatchService", "StandingService", "SponsorService"
+  "MatchService", "StandingService", "SponsorService", "EventSponsorService"
 ]

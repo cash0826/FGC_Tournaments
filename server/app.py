@@ -8,7 +8,7 @@ from controllers import (
   CompetitorController, UpdateCompetitorStanding,
   BracketController, BracketInstanceController,
   TeamController, TeamMemberController, MyTeamsController,
-  MatchController, SponsorController
+  MatchController, SponsorController, EventSponsorController
 )
 from dotenv import load_dotenv
 
@@ -49,6 +49,7 @@ def create_app():
   
   # ---- Sponsors ----
   api.add_resource(SponsorController, "/api/sponsors")    # Full CRUD
+  api.add_resource(EventSponsorController, "/api/events/<int:event_id>/sponsors")
   
   # ---- Events ----
   api.add_resource(EventController, "/api/events")    # GET (ALL) / POST
@@ -58,7 +59,7 @@ def create_app():
   api.add_resource(TournamentController, "/api/events/<int:event_id>/tournaments")    # GET / POST
   api.add_resource(TournamentInstanceController, "/api/events/<int:event_id>/tournaments/<int:tournament_id>")    # GET / PATCH / DELETE
   
-  # ---- Competitors ---- [can refer to team or user]
+  # ---- Competitors & Standings ---- [can refer to team or user]
   api.add_resource(CompetitorController, "/api/events/<int:event_id>/tournaments/<int:tournament_id>/competitors")    # GET / POST / DELETE
   api.add_resource(UpdateCompetitorStanding, "/api/events/<int:event_id>/tournaments/<int:tournament_id>/competitors/<int:competitor_id>")    # PATCH
   

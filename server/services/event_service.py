@@ -1,4 +1,5 @@
-from models import Event
+from extensions import db
+from models import Event, Sponsor, EventSponsor
 from .base_service import BaseService
 from utils.errors import NotFoundError, ValidationError
 from datetime import datetime
@@ -30,3 +31,13 @@ class EventService(BaseService):
       raise ValidationError(f"{error}") from error
     
     return super().update(instance_id, data)
+  
+  @classmethod
+  def get_event_sponsors(cls, event_id):
+    sponsors = (
+      db.session.query(Sponsor.name)
+      .join(EventSponsor, EventSponsor.sponsor_id == Sponsor.id)
+      .filter(EventSponsor.event_id == event_id)
+      .all()
+    )
+    return [event[0] for event in events]
