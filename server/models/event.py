@@ -30,6 +30,11 @@ class Event(db.Model):
     "Tournament", back_populates="event", cascade='all, delete-orphan'
   )
   
+  # an event contains multiple event_sponsors
+  sponsors = db.relationship(
+    "EventSponsor", back_populates="event", cascade="all, delete-orphan"
+  )
+  
   # --------------
   # Validations
   # --------------

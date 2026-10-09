@@ -37,10 +37,10 @@ ENTITY_SPECS = {
     "Match": ("models.match", "Match", "matches"),
     "Standing": ("models.standing", "Standing", "standings"),
     "Sponsor": ("models.sponsor", "Sponsor", "sponsors"),
-    "TournamentSponsor": (
-        "models.tournament_sponsor",
-        "TournamentSponsor",
-        "tournament_sponsors",
+    "EventSponsor": (
+        "models.event_sponsor",
+        "EventSponsor",
+        "event_sponsors",
     ),
 }
 
@@ -100,6 +100,8 @@ def app():
             "TeamMember",
             "TournamentCompetitor",
             "Match",
+            "Sponsor",
+            "EventSponsor",
         ):
             model_class(entity_name)
         db.create_all()
@@ -433,17 +435,20 @@ def test_standing_serializes_competitor_rank_and_points(app, session):
     assert standing.to_dict()["rank"] == 1
 
 
-def test_sponsor_many_to_many_relationship_preserves_sponsorship_attributes(app, session):
+def test_event_sponsor_many_to_many_relationship_preserves_sponsorship_attributes(app, session):
     User = model_class("User")
     Event = model_class("Event")
-    Game = model_class("Game") 
-    Tournament = model_class("Tournament")
     Sponsor = model_class("Sponsor")
-    TournamentSponsor = model_class("TournamentSponsor")
-    tournament = make_tournament(Tournament, Event, Game, User, "Sponsored Cup")
+    EventSponsor = model_class("EventSponsor")
+    host = make_user(User, "sponsor-event@example.com")
+    event = Event(
+        name="Sponsored Event",
+        start=datetime(2028, 1, 1, tzinfo=timezone.utc),
+        host=host,
+    )
     sponsor = Sponsor(name="Arcade Co.", contact_email="contact@arcade.test")
-    sponsorship = TournamentSponsor(
-        tournament=tournament,
+    sponsorship = EventSponsor(
+        event=event,
         sponsor=sponsor,
         sponsorship_tier="gold",
         amount=2500,
@@ -451,6 +456,6 @@ def test_sponsor_many_to_many_relationship_preserves_sponsorship_attributes(app,
     session.add(sponsorship)
     session.commit()
 
-    assert tournament.sponsors[0].sponsor is sponsor
-    assert sponsor.tournaments[0].tournament is tournament
+    assert event.sponsors[0].sponsor is sponsor
+    assert sponsor.sponsored_events[0].event is event
     assert sponsorship.to_dict()["sponsorship_tier"] == "gold"

@@ -10,7 +10,9 @@ class Sponsor(db.Model):
   website = db.Column(db.String)
   contact_email = db.Column(db.String(120))
   
-  # TODO: sponsors event_sponsors (has many)
+  # sponsors back sponsored_events (has many)
+  # Opted to keep children if parent is deleted (no cascade)
+  sponsored_events = db.relationship("EventSponsor", back_populates="sponsor")
   
   @validates("name", "logo_url", "website")
   def validates_text(self, key, value):

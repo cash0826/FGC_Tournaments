@@ -12,10 +12,12 @@ from .tournament_competitor import TournamentCompetitor
 from .match import Match, MatchStatuses
 from .standing import Standing
 from .sponsor import Sponsor
+from .event_sponsor import EventSponsor, SponsorshipTier
 
 __all__ = [
   "Role", "User", "UserRole", "UserSocialAccount",
   "Event", "Platform", "Game", "Tournament", "GamingPlatform", "LineUpTypes",
   "Bracket", "Team", "TeamMember", "TeamRole", "TournamentCompetitor",
-  "Match", "MatchStatuses", "Standing", "Sponsor"
+  "Match", "MatchStatuses", "Standing", "Sponsor", "EventSponsor",
+  "SponsorshipTier"
 ]
