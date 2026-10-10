@@ -7,7 +7,7 @@ from utils.require import require_admin
 
 # For admin use: Delete user
 
-class UserController(Resource):
+class DeleteUser(Resource):
   
   @jwt_required()
   @require_admin

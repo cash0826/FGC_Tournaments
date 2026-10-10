@@ -23,6 +23,7 @@ class MatchController(Resource):
       return {"error": "Request body must be a JSON object"}, 400
     
     try:
+      require_event_ownership_or_admin(event_id)
       new_match = MatchService.create(event_id, tournament_id, data)
     except AppError as error:
       return {"error": str(error)}, error.status_code

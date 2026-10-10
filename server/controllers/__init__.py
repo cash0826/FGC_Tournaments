@@ -1,6 +1,6 @@
 from .auth_controller import Signup, Login, Me, PasswordUpdate
 from .role_controller import UserRoles
-from .user_controller import UserController
+from .user_controller import DeleteUser
 from .social_account_controller import UserSocialAccount
 from .event_controller import EventController, EventInstanceController
 from .game_controller import GameController, GameInstanceController
@@ -13,7 +13,7 @@ from .sponsor_controller import SponsorController, EventSponsorController
 
 
 __all__ = [
-  "Signup", "Login", "Me", "UserRoles", "PasswordUpdate", "UserController", "UserSocialAccount",
+  "Signup", "Login", "Me", "UserRoles", "PasswordUpdate", "DeleteUser", "UserSocialAccount",
   "EventController", "EventInstanceController", 
   "GameController", "GameInstanceController",
   "TournamentController", "TournamentInstanceController", 

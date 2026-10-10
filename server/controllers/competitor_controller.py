@@ -21,6 +21,8 @@ class CompetitorController(Resource):
     if not isinstance(data, dict):
       return {"error": "Request body must be a JSON object."}, 400
     
+    # Adding a competitor will also add a standing for that competitor with null points and rank. 
+    # This is done from the TournamentCompetitorService module.
     try:
       new_competitor = TournamentCompetitorService.add_competitor(event_id, tournament_id, data)
     except AppError as error:

@@ -2,7 +2,7 @@ from config import Config
 from flask import Flask
 from extensions import db, migrate, jwt, bcrypt, api
 from controllers import (
-  Signup, Login, Me, PasswordUpdate, UserRoles, UserController, UserSocialAccount,
+  Signup, Login, Me, PasswordUpdate, UserRoles, DeleteUser, UserSocialAccount,
   EventController, EventInstanceController, GameController, GameInstanceController,
   TournamentController, TournamentInstanceController,
   CompetitorController, UpdateCompetitorStanding,
@@ -35,7 +35,7 @@ def create_app():
   api.add_resource(UserSocialAccount, "/api/me/social_accounts")    # GET / POST / DELETE
   
   # ---- User Management for Admins ----
-  api.add_resource(UserController, "/api/users/<int:user_id>")   # DELETE user (admin resource)
+  api.add_resource(DeleteUser, "/api/users/<int:user_id>")   # DELETE user (admin resource)
   api.add_resource(UserRoles, "/api/users/<int:user_id>/roles")   # POST / DELETE roles (admin resource)
   
   # ---- Games ----
@@ -43,8 +43,8 @@ def create_app():
   api.add_resource(GameInstanceController, "/api/games/<int:game_id>")    # GET / PATCH / DELETE
   
   # ---- Teams ----
-  api.add_resource(TeamController, "/api/teams")    # POST / DELETE
-  api.add_resource(TeamMemberController, "/api/teams/<int:team_id>")    # POST / DELETE (members) 
+  api.add_resource(TeamController, "/api/teams")    # POST / PATCH / DELETE
+  api.add_resource(TeamMemberController, "/api/teams/<int:team_id>/members")    # POST / DELETE (members) 
   api.add_resource(MyTeamsController, "/api/me/teams")    # GET
   
   # ---- Sponsors ----
