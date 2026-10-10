@@ -40,4 +40,4 @@ class EventService(BaseService):
       .filter(EventSponsor.event_id == event_id)
       .all()
     )
-    return [event[0] for event in events]
+    return [sponsor[0] for sponsor in sponsors]

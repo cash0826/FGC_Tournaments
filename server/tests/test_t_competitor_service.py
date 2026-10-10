@@ -55,7 +55,7 @@ def competitor_context(app):
         name="Team Tournament",
         start=datetime(2035, 2, 1),
         registration_deadline=datetime(2035, 1, 20),
-        line_up_type="team",
+        line_up_type="teams",
     )
     unsupported_tournament = Tournament(
         event=event,

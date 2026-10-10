@@ -80,14 +80,17 @@ def test_bracket_operations_are_scoped_to_event_and_tournament(tournament_contex
 
 
 def test_tournament_update_parses_iso_dates_and_rejects_invalid_dates(tournament_context):
-    _, tournament = tournament_context
+    event, tournament = tournament_context
     updated = TournamentService.update_tournament(
+        event.id,
         tournament.id,
         {"start": "2035-03-01T12:30:00"},
     )
 
     assert updated.start == datetime(2035, 3, 1, 12, 30)
     with pytest.raises(ValidationError):
-        TournamentService.update_tournament(tournament.id, {"start": "not-a-date"})
+        TournamentService.update_tournament(
+            event.id, tournament.id, {"start": "not-a-date"}
+        )
     with pytest.raises(ValidationError):
-        TournamentService.update_tournament(tournament.id, None)
+        TournamentService.update_tournament(event.id, tournament.id, None)

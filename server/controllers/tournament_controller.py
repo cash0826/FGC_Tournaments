@@ -34,7 +34,7 @@ class TournamentController(Resource):
 class TournamentInstanceController(Resource):
   def get(self, event_id, tournament_id):
     try:
-      tournament = TournamentService.get_by_id(tournament_id)
+      tournament = TournamentService.get_by_id(event_id, tournament_id)
     except AppError as error:
       return {"error": str(error)}, error.status_code
     
@@ -49,7 +49,7 @@ class TournamentInstanceController(Resource):
     
     try:
       require_event_ownership_or_admin(event_id)
-      updated_tournament = TournamentService.update_tournament(tournament_id, data)
+      updated_tournament = TournamentService.update_tournament(event_id, tournament_id, data)
     except AppError as error:
       return {"error": str(error)}, error.status_code
     
@@ -60,7 +60,7 @@ class TournamentInstanceController(Resource):
   def delete(self, event_id, tournament_id):
     try:
       require_event_ownership_or_admin(event_id)
-      delete = TournamentService.delete(tournament_id)
+      delete = TournamentService.delete(event_id, tournament_id)
     except AppError as error:
       return {"error": str(error)}, error.status_code
     

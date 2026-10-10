@@ -69,7 +69,7 @@ class StandingService(BaseService):
   def get_all(cls, event_id, tournament_id):
     tournament = cls._get_tournament(event_id, tournament_id)
     
-    if tournament.line_up_type == LineUpTypes.TEAM:
+    if tournament.line_up_type == LineUpTypes.TEAMS:
       return cls.get_standings_for_all_teams(tournament.id)
     if tournament.line_up_type == LineUpTypes.SINGLES:
       return cls.get_standings_for_all_users(tournament.id)

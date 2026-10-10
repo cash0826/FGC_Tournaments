@@ -38,9 +38,9 @@ class TournamentCompetitorService(BaseService):
       )
     if tournament.line_up_type == LineUpTypes.SINGLES and user_id is None:
       raise ValidationError("Singles tournaments require a user_id.")
-    if tournament.line_up_type == LineUpTypes.TEAM and team_id is None:
+    if tournament.line_up_type == LineUpTypes.TEAMS and team_id is None:
       raise ValidationError("Team tournaments require a team_id.")
-    if tournament.line_up_type not in (LineUpTypes.SINGLES, LineUpTypes.TEAM):
+    if tournament.line_up_type not in (LineUpTypes.SINGLES, LineUpTypes.TEAMS):
       raise ValidationError("Tournament lineup type does not support competitors.")
 
     entry_id = team_id if team_id is not None else user_id

@@ -9,8 +9,8 @@ from .competitor_controller import CompetitorController, UpdateCompetitorStandin
 from .bracket_controller import BracketController, BracketInstanceController
 from .team_controller import TeamController, TeamMemberController, MyTeamsController
 from .match_controller import MatchController
-from .sponsor_controller import SponsorController, EventSponsorController
-
+from .sponsor_controller import SponsorController
+from .event_sponsor_controller import EventSponsorController
 
 __all__ = [
   "Signup", "Login", "Me", "UserRoles", "PasswordUpdate", "DeleteUser", "UserSocialAccount",

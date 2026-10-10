@@ -23,7 +23,8 @@ class TournamentService(BaseService):
     return super().create(data)
 
   @classmethod
-  def update_tournament(cls, instance_id, data):
+  def update_tournament(cls, event_id, tournament_id, data):
+    tournament = cls._get_tournament(event_id, tournament_id)
     if not isinstance(data, dict):
       raise ValidationError("Request body must be a JSON object.")
 
@@ -35,4 +36,9 @@ class TournamentService(BaseService):
     except ValueError as error:
       raise ValidationError(f"{error}") from error
     
-    return super().update(instance_id, data)
+    return super().update(tournament.id, data)
+  
+  @classmethod
+  def delete(cls, event_id, tournament_id):
+    tournament = cls._get_tournament(event_id, tournament_id)
+    return super().delete(tournament.id)

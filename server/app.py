@@ -69,6 +69,11 @@ def create_app():
   
   # ---- Matches ----
   api.add_resource(MatchController, "/api/events/<int:event_id>/tournaments/<int:tournament_id>/matches")   # Full CRUD
+
+  # simple liveness check at the root
+  @app.route("/")
+  def index():
+      return "Flask server is running."
   
   return app
   

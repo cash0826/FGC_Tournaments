@@ -276,7 +276,7 @@ def test_team_membership_and_team_competitor_relationships_persist(app, session)
         name="Team Cup", 
         event=event,
         game=game, 
-        line_up_type="team",
+        line_up_type="teams",
         start=datetime(2028, 1, 1, tzinfo=timezone.utc),
         registration_deadline=datetime(2027, 12, 25, tzinfo=timezone.utc)
     )
@@ -317,7 +317,7 @@ def test_solo_competitor_requires_user_and_team_competitor_requires_team(app, se
         name="Team Cup", 
         event=event,
         game=game, 
-        line_up_type="team",
+        line_up_type="teams",
         start=datetime(2028, 1, 1, tzinfo=timezone.utc),
         registration_deadline=datetime(2027, 12, 25, tzinfo=timezone.utc)
     )
