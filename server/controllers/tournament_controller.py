@@ -34,7 +34,7 @@ class TournamentController(Resource):
 class TournamentInstanceController(Resource):
   def get(self, event_id, tournament_id):
     try:
-      tournament = TournamentService.get_by_id(event_id, tournament_id)
+      tournament = TournamentService._get_tournament(event_id, tournament_id)
     except AppError as error:
       return {"error": str(error)}, error.status_code
     

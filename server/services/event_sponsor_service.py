@@ -7,18 +7,11 @@ class EventSponsorService(BaseService):
   
   @classmethod
   def assign_sponsor(cls, event_id, data):
+    cls._get_event(event_id)
     sponsor_name = data.get("sponsor")
     sponsorship_tier = data.get("sponsorship_tier")
     amount = data.get("amount")
-    
-    if not isinstance(event_id, int) or event_id < 1:
-      raise ValidationError("Event id must be a positive integer.")
     if not isinstance(sponsor_name, str) or not sponsor_name.strip():
-      raise ValidationError("Sponsor is required.")
-    
-    event = Event.query.filter_by(id=event_id).forst()
-    if not event:
-      raise NotFoundError("Event not found.")
     
     sponsor = Sponsor.query.filter_by(name=sponsor_name.strip().lower()).first()
     if not sponsor:
@@ -40,14 +33,9 @@ class EventSponsorService(BaseService):
   
   @classmethod
   def remove_sponsor(event_id, sponsor_name):
-    if not isinstance(event_id, int) or event_id < 1:
-      raise ValidationError("Event id must be a positive integer.")
+    cls._get_event(event_id)
     if not isinstance(sponsor_name, str) or not sponsor_name.strip():
       raise ValidationError("Sponsor is required.")
-    
-    event = Event.query.filter_by(id=event_id).forst()
-    if not event:
-      raise NotFoundError("Event not found.")
     
     sponsor = Sponsor.query.filter_by(name=sponsor_name.strip().lower()).first()
     if not sponsor:

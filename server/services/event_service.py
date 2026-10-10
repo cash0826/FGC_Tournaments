@@ -34,6 +34,8 @@ class EventService(BaseService):
   
   @classmethod
   def get_event_sponsors(cls, event_id):
+    cls._get_event(event_id)
+    
     sponsors = (
       db.session.query(Sponsor.name)
       .join(EventSponsor, EventSponsor.sponsor_id == Sponsor.id)

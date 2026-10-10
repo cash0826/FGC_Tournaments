@@ -8,6 +8,7 @@ class TournamentService(BaseService):
   
   @classmethod
   def create_tournament(cls, event_id, data):
+    cls._get_event(event_id)
     if not isinstance(data, dict):
       raise ValidationError("Request body must be a JSON object.")
 
