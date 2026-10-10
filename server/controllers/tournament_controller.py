@@ -9,7 +9,7 @@ from utils.require import require_admin_or_host, require_event_ownership_or_admi
 class TournamentController(Resource):
   def get(self, event_id):
     try:
-      tournaments = TournamentService.get_all(filters={"event_id": event_id})
+      tournaments = TournamentService.get_all(event_id)
     except AppError as error:
       return {"error": str(error)}, error.status_code
     

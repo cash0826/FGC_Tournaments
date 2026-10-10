@@ -12,6 +12,7 @@ class EventSponsorService(BaseService):
     sponsorship_tier = data.get("sponsorship_tier")
     amount = data.get("amount")
     if not isinstance(sponsor_name, str) or not sponsor_name.strip():
+      raise ValidationError("Sponsor is required.")
     
     sponsor = Sponsor.query.filter_by(name=sponsor_name.strip().lower()).first()
     if not sponsor:

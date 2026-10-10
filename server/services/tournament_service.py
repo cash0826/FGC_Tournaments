@@ -7,6 +7,11 @@ class TournamentService(BaseService):
   model = Tournament
   
   @classmethod
+  def get_all(cls, event_id):
+    cls._get_event(event_id)
+    return super().get_all(filters={"event_id": event_id})
+    
+  @classmethod
   def create_tournament(cls, event_id, data):
     cls._get_event(event_id)
     if not isinstance(data, dict):
