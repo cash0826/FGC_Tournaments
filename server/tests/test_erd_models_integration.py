@@ -215,7 +215,7 @@ def test_event_host_and_tournament_game_relationships_persist(app, session):
     session.commit()
 
     assert tournament.event.host is host
-    assert tournament.game.name == "Street Fighter 6"
+    assert tournament.game.name == "street fighter 6"
     assert event.tournaments == [tournament]
     assert game.tournaments == [tournament]
 

@@ -30,7 +30,7 @@ def create_app():
   # ---- Auth / Profile ----
   api.add_resource(Signup, "/api/signup")   # POST
   api.add_resource(Login, "/api/login")   # POST
-  api.add_resource(Me, "/api/me")   # GET / PATCH / DELETE
+  api.add_resource(Me, "/api/me")   # GET / PATCH 
   api.add_resource(PasswordUpdate, "/api/me/password")    # PATCH
   api.add_resource(UserSocialAccount, "/api/me/social_accounts")    # GET / POST / DELETE
   
@@ -43,7 +43,7 @@ def create_app():
   api.add_resource(GameInstanceController, "/api/games/<int:game_id>")    # GET / PATCH / DELETE
   
   # ---- Teams ----
-  api.add_resource(TeamController, "/api/teams")    # POST / PATCH / DELETE
+  api.add_resource(TeamController, "/api/teams", "/api/teams/<int:team_id>")    # POST / PATCH (id) / DELETE (id)
   api.add_resource(TeamMemberController, "/api/teams/<int:team_id>/members")    # POST / DELETE (members) 
   api.add_resource(MyTeamsController, "/api/me/teams")    # GET
   
@@ -60,15 +60,37 @@ def create_app():
   api.add_resource(TournamentInstanceController, "/api/events/<int:event_id>/tournaments/<int:tournament_id>")    # GET / PATCH / DELETE
   
   # ---- Competitors & Standings ---- [can refer to team or user]
-  api.add_resource(CompetitorController, "/api/events/<int:event_id>/tournaments/<int:tournament_id>/competitors")    # GET / POST / DELETE
-  api.add_resource(UpdateCompetitorStanding, "/api/events/<int:event_id>/tournaments/<int:tournament_id>/competitors/<int:competitor_id>")    # PATCH
+  # GET / POST / * DELETE (competitor_id). *event owner resource
+  api.add_resource(
+    CompetitorController, 
+    "/api/events/<int:event_id>/tournaments/<int:tournament_id>/competitors",
+    "/api/events/<int:event_id>/tournaments/<int:tournament_id>/competitors/<int:competitor_id>"
+  )  
+  # PATCH  
+  api.add_resource(
+    UpdateCompetitorStanding, 
+    "/api/events/<int:event_id>/tournaments/<int:tournament_id>/competitors/<int:competitor_id>"
+  )
   
   # ---- Bracket ----
-  api.add_resource(BracketController,"/api/events/<int:event_id>/tournaments/<int:tournament_id>/bracket")    # GET / POST
-  api.add_resource(BracketInstanceController, "/api/events/<int:event_id>/tournaments/<int:tournament_id>/bracket/<int:bracket_id>")    # GET / PATCH / DELETE
+  # GET / POST
+  api.add_resource(
+    BracketController,
+    "/api/events/<int:event_id>/tournaments/<int:tournament_id>/bracket"
+  )    
+  # GET / PATCH / DELETE
+  api.add_resource(
+    BracketInstanceController, 
+    "/api/events/<int:event_id>/tournaments/<int:tournament_id>/bracket/<int:bracket_id>"
+    )    
   
   # ---- Matches ----
-  api.add_resource(MatchController, "/api/events/<int:event_id>/tournaments/<int:tournament_id>/matches")   # Full CRUD
+  # Full CRUD
+  api.add_resource(
+    MatchController, 
+    "/api/events/<int:event_id>/tournaments/<int:tournament_id>/matches",
+    "/api/events/<int:event_id>/tournaments/<int:tournament_id>/matches/<int:match_id>"
+  )   
 
   # simple liveness check at the root
   @app.route("/")

@@ -78,16 +78,16 @@ class AuthService:
       raise AppError(f"{error}", 500) from error
     return user
   
-  @staticmethod
-  def delete_profile(user, current_password):   # For user to delete their own profile
-    AuthService.verify_current_password(user, current_password)
+  # @staticmethod
+  # def delete_profile(user, current_password):   # For user to delete their own profile
+  #   AuthService.verify_current_password(user, current_password)
     
-    try:
-      db.session.delete(user)
-      db.session.commit()
-    except Exception as error:
-      db.session.rollback()
+  #   try:
+  #     db.session.delete(user)
+  #     db.session.commit()
+  #   except Exception as error:
+  #     db.session.rollback()
       
-      raise AppError(f"{error}", 500) from error
+  #     raise AppError(f"{error}", 500) from error
     
     

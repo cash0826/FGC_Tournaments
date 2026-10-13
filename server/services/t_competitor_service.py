@@ -76,7 +76,6 @@ class TournamentCompetitorService(BaseService):
     return competitor
   
   @classmethod
-  def remove_competitor(cls, event_id, tournament_id, data):
-    tournament_competitor_id = data.get("tournament_competitor_id")
+  def remove_competitor(cls, event_id, tournament_id, competitor_id):
     competitor = cls.get_tournament_competitor_by_id(event_id, tournament_id, tournament_competitor_id)
     return super().delete(competitor.id)

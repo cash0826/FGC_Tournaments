@@ -50,10 +50,7 @@ class Tournament(db.Model):
     "Match", back_populates="tournament", cascade="all, delete-orphan"
   )
   
-  # TODO: tournament ranks the standings
-  # TODO: tournament is backed by sponsors
-  
-  # TODO: tournament registers a tournament_competitor / has (many) competitors
+  # tournament registers a tournament_competitor / has (many) competitors
   competitors = db.relationship(
     "TournamentCompetitor", back_populates="tournament", cascade="all, delete-orphan"
   )

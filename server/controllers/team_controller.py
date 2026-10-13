@@ -20,26 +20,22 @@ class TeamController(Resource):
     return new_team.to_dict(), 201
   
   @jwt_required()
-  def patch(self):
+  def patch(self, team_id):
     data = request.get_json(silent=True)
     if not isinstance(data, dict):
       return {"error": "Request body must be a JSON object."}, 400
     
     try:
-      updated_team = TeamService.update(data.get("team", data))
+      updated_team = TeamService.update(team_id, data)
     except AppError as error:
       return {"error": "Request body must be a JSON object."}, 400
     
     return updated_team.to_dict(), 200
   
   @jwt_required()
-  def delete(self):
-    data = request.get_json(silent=True)
-    if not isinstance(data, dict):
-      return {"error": "Request body must be a JSON object."}, 400
-
+  def delete(self, team_id):
     try:
-      TeamService.delete(data.get("team"))
+      TeamService.delete(team_id)
     except AppError as error:
       return {"error": str(error)}, error.status_code
     return {"message": "Team deleted successfully"}, 200

@@ -31,13 +31,9 @@ class SponsorController(Resource):
   
   @jwt_required()
   @require_admin_or_host
-  def patch(self):
-    data = request.get_json()
-    if not isinstance(data, dict):
-      return {"error": "Request body must be a JSON object."}, 400
-    
+  def patch(self, sponsor_id):
     try:
-      updated_sponsor = SponsorService.update(data, data.get("sponsor_id"))
+      updated_sponsor = SponsorService.update(data, sponsor_id)
     except AppError as error:
       return {"error": str(error)}, error.status_code
     
@@ -46,12 +42,8 @@ class SponsorController(Resource):
   @jwt_required()
   @require_admin_or_host
   def delete(self):
-    data = request.get_json()
-    if not isinstance(data, dict):
-      return {"error": "Request body must be a JSON object."}, 400
-    
     try:
-      SponsorService.delete(data.get("sponsor_id"))
+      SponsorService.delete(sponsor_id)
     except AppError as error:
       return {"error": str(error)}, error.status_code
     

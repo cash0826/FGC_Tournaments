@@ -3,7 +3,7 @@ from flask_restful import Resource
 from flask_jwt_extended import jwt_required
 from services import TournamentCompetitorService, StandingService
 from utils.errors import AppError
-from utils.require import require_admin_or_host
+from utils.require import require_admin_or_host, require_event_ownership_or_admin
 
 # /events/<event_id>/tournaments/<tournament_id>/competitors
 class CompetitorController(Resource):
@@ -30,14 +30,12 @@ class CompetitorController(Resource):
     
     return new_competitor.to_dict(), 201
   
+  @require_admin_or_host
   @jwt_required()
-  def delete(self, event_id, tournament_id):
-    data = request.get_json()   # competitor to be deleted from tournament
-    if not isinstance(data, dict):
-      return {"error": "Request body must be a JSON object."}, 400
-    
+  def delete(self, event_id, tournament_id, competitor_id):
     try:
-      TournamentCompetitorService.remove_competitor(event_id, tournament_id, data)
+      require_event_ownership_or_admin(event_id)
+      TournamentCompetitorService.remove_competitor(event_id, tournament_id, competitor_id)
     except AppError as error:
       return {"error": str(error)}, error.status_code
     

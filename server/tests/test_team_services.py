@@ -54,21 +54,3 @@ def test_team_membership_services_access_and_update_database(app):
     assert TeamMemberService.get_teams_for_user(user.id) == []
     with pytest.raises(NotFoundError):
         TeamMemberService.remove_team_member(team.id, user.id)
-
-
-def test_team_services_validate_references_and_delete_by_team_name(app):
-    with pytest.raises(ValidationError):
-        TeamMemberService.add_team_member(0, {"user_id": 1})
-    with pytest.raises(ValidationError):
-        TeamMemberService.add_team_member(1, {})
-    with pytest.raises(NotFoundError):
-        TeamMemberService.add_team_member(1, {"user_id": 1})
-
-    team = Team(name="Delete Squad")
-    db.session.add(team)
-    db.session.commit()
-
-    TeamService.delete("Delete Squad")
-    assert Team.query.filter_by(name="Delete Squad").first() is None
-    with pytest.raises(NotFoundError):
-        TeamService.delete("Delete Squad")

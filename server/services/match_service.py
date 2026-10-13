@@ -116,15 +116,13 @@ class MatchService(BaseService):
     return super().create(match_data)
 
   @classmethod
-  def update(cls, event_id, tournament_id, data):
+  def update(cls, event_id, tournament_id, match_id, data):
     if not isinstance(data, dict):
       raise ValidationError("Request body must be a JSON object.")
-    if "match_id" not in data:
-      raise ValidationError("Match id is required.")
 
-    match = cls._get_match(event_id, tournament_id, data["match_id"])
+    match = cls._get_match(event_id, tournament_id, match_id)
     unsupported_fields = data.keys() - {
-      "match_id", "tournament_id", "round", "start_time", "status",
+      "tournament_id", "round", "start_time", "status",
       "competitor_a_id", "competitor_b_id", "winner_id",
     }
     if unsupported_fields:
@@ -135,7 +133,6 @@ class MatchService(BaseService):
       raise ValidationError("Tournament id must match the request path.")
 
     match_data = dict(data)
-    match_data.pop("match_id")
     match_data.pop("tournament_id", None)
     if "start_time" in match_data:
       match_data["start_time"] = cls._normalize_start_time(match_data["start_time"])

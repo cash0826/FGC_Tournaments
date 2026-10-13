@@ -120,7 +120,8 @@ def test_update_rejects_winner_outside_match_competitors(match_context):
         MatchService.update(
             tournament.event_id,
             tournament.id,
-            {"match_id": match.id, "winner_id": competitor_other.id},
+            match.id,
+            {"winner_id": competitor_other.id}
         )
 
 
@@ -140,5 +141,6 @@ def test_update_rejects_competitor_from_another_tournament(match_context):
         MatchService.update(
             tournament.event_id,
             tournament.id,
-            {"match_id": match.id, "competitor_b_id": competitor_other.id},
+            match.id,
+            {"competitor_b_id": competitor_other.id}
         )

@@ -5,9 +5,9 @@ class Sponsor(db.Model):
   __tablename__ = "sponsors"
   
   id = db.Column(db.Integer, primary_key=True)
-  name = db.Column(db.String(50), nullable=False)
-  logo_url = db.Column(db.String)
-  website = db.Column(db.String)
+  name = db.Column(db.String(50), unique=True, nullable=False, index=True)
+  logo_url = db.Column(db.Text)
+  website = db.Column(db.Text)
   contact_email = db.Column(db.String(120))
   
   # sponsors back sponsored_events (has many)

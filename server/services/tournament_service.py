@@ -16,7 +16,16 @@ class TournamentService(BaseService):
     cls._get_event(event_id)
     if not isinstance(data, dict):
       raise ValidationError("Request body must be a JSON object.")
-
+    
+    unsupported_fields = data.keys() - {
+      "game_id", "name", "start", "registration_deadline",
+      "gaming_platform", "line_up_type"
+    }
+    if unsupported_fields:
+      raise ValidationError(
+        f"Event fields cannot be set: {', '.join(sorted(unsupported_fields))}."
+      )
+      
     try:
       if "start" in data and isinstance(data["start"], str):
         data["start"] = datetime.fromisoformat(data["start"])
@@ -33,7 +42,16 @@ class TournamentService(BaseService):
     tournament = cls._get_tournament(event_id, tournament_id)
     if not isinstance(data, dict):
       raise ValidationError("Request body must be a JSON object.")
-
+    
+    unsupported_fields = data.keys() - {
+      "name", "start", "registration_deadline",
+      "gaming_platform"
+    }
+    if unsupported_fields:
+      raise ValidationError(
+        f"Event fields cannot be set: {', '.join(sorted(unsupported_fields))}."
+      )
+      
     try:
       if "start" in data and isinstance(data["start"], str):
         data["start"] = datetime.fromisoformat(data["start"])

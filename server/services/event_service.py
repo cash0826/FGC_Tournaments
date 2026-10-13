@@ -9,6 +9,15 @@ class EventService(BaseService):
   
   @classmethod
   def create_event(cls, user_id, data):
+    unsupported_fields = data.keys() - {
+      "name", "start", "end", "in_person",
+      "location", "description", "rules"
+    }
+    if unsupported_fields:
+      raise ValidationError(
+        f"Event fields cannot be set: {', '.join(sorted(unsupported_fields))}."
+      )
+
     try:
       if 'start' in data and isinstance(data['start'], str):
         data['start'] = datetime.fromisoformat(data['start'])
@@ -21,7 +30,16 @@ class EventService(BaseService):
     return super().create(data)
   
   @classmethod
-  def update_event(cls, instance_id, data):
+  def update_event(cls, event_id, data):
+    cls._get_event(event_id)
+    unsupported_fields = data.keys() - {
+      "name", "start", "end", "in_person",
+      "location", "description", "rules"
+    }
+    if unsupported_fields:
+      raise ValidationError(
+        f"Event fields cannot be set: {', '.join(sorted(unsupported_fields))}."
+      )
     try:
       if 'start' in data and isinstance(data['start'], str):
         data['start'] = datetime.fromisoformat(data['start'])

@@ -31,28 +31,24 @@ class MatchController(Resource):
   
   @jwt_required()
   @require_admin_or_host
-  def patch(self, event_id, tournament_id):
+  def patch(self, event_id, tournament_id, match_id):
     data = request.get_json()
     if not isinstance(data, dict):
       return {"error": "Request body must be a JSON object"}, 400
     
     try:
       require_event_ownership_or_admin(event_id)
-      updated_match = MatchService.update(event_id, tournament_id, data)
+      updated_match = MatchService.update(event_id, tournament_id, match_id, data)
     except AppError as error:
       return {"error": str(error)}, error.status_code
     return updated_match.to_dict(), 200
   
   @jwt_required()
   @require_admin_or_host
-  def delete(self, event_id, tournament_id):
-    data = request.get_json()
-    if not isinstance(data, dict):
-      return {"error": "Request body must be a JSON object"}, 400
-    
+  def delete(self, event_id, tournament_id, match_id):
     try:
       require_event_ownership_or_admin(event_id)
-      MatchService.delete(event_id, tournament_id, data.get("match_id"))
+      MatchService.delete(event_id, tournament_id, match_id)
     except AppError as error:
       return {"error": str(error)}, error.status_code
     return {"message": "Match deleted from tournament successfully"}, 200

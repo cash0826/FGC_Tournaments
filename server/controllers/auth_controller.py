@@ -66,20 +66,20 @@ class Me(Resource):
     
     return {"user": updated_user.to_dict()}, 200
   
-  @jwt_required()
-  def delete(self):
-    user_id = int(get_jwt_identity())
-    data = request.get_json(silent=True)
-    if not isinstance(data, dict):
-      return {"error": "Request body must be a JSON object."}, 400
+  # @jwt_required()
+  # def delete(self):
+  #   user_id = int(get_jwt_identity())
+  #   data = request.get_json(silent=True)
+  #   if not isinstance(data, dict):
+  #     return {"error": "Request body must be a JSON object."}, 400
     
-    try: 
-      user = UserService.get_user_by_id(user_id)
-      AuthService.delete_profile(user, current_password=data.get("current_password"))
-    except AppError as error:
-      return {"error": str(error)}, error.status_code
+  #   try: 
+  #     user = UserService.get_user_by_id(user_id)
+  #     AuthService.delete_profile(user, current_password=data.get("current_password"))
+  #   except AppError as error:
+  #     return {"error": str(error)}, error.status_code
     
-    return {"message": "Delete Successful"}, 200
+  #   return {"message": "Delete Successful"}, 200
 
 # /me/password
 class PasswordUpdate(Resource):

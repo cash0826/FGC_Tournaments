@@ -23,7 +23,7 @@ class EventSponsorService(BaseService):
       raise ConflictError(f"{sponsor_name} is already backing this event.")
 
     event_sponsor_data.pop("sponsor")
-    unsupported_fields = data.key() - {"sponsor_id", "sponsorship_tier", "amount"}
+    unsupported_fields = data.keys() - {"sponsor_id", "sponsorship_tier", "amount"}
     if unsupported_fields:
       raise ValidationError(
         f"Event Sponsor fields cannot be set: {', '.join(sorted(unsupported_fields))}."
