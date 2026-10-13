@@ -1,0 +1,106 @@
+from config import Config
+from flask import Flask
+from extensions import db, migrate, jwt, bcrypt, api
+from controllers import (
+  Signup, Login, Me, PasswordUpdate, UserRoles, DeleteUser, UserSocialAccount,
+  EventController, EventInstanceController, GameController, GameInstanceController,
+  TournamentController, TournamentInstanceController,
+  CompetitorController, UpdateCompetitorStanding,
+  BracketController, BracketInstanceController,
+  TeamController, TeamMemberController, MyTeamsController,
+  MatchController, SponsorController, EventSponsorController
+)
+from dotenv import load_dotenv
+
+load_dotenv()
+
+def create_app():
+  app = Flask(__name__)
+  app.config.from_object(Config)
+  
+  # initialize extensions
+  db.init_app(app)
+  migrate.init_app(app, db)
+  jwt.init_app(app)
+  bcrypt.init_app(app)
+  api.init_app(app)
+  
+  # import resources
+  
+  # ---- Auth / Profile ----
+  api.add_resource(Signup, "/api/signup")   # POST
+  api.add_resource(Login, "/api/login")   # POST
+  api.add_resource(Me, "/api/me")   # GET / PATCH 
+  api.add_resource(PasswordUpdate, "/api/me/password")    # PATCH
+  api.add_resource(UserSocialAccount, "/api/me/social_accounts")    # GET / POST / DELETE
+  
+  # ---- User Management for Admins ----
+  api.add_resource(DeleteUser, "/api/users/<int:user_id>")   # DELETE user (admin resource)
+  api.add_resource(UserRoles, "/api/users/<int:user_id>/roles")   # POST / DELETE roles (admin resource)
+  
+  # ---- Games ----
+  api.add_resource(GameController, "/api/games")    # GET (ALL) / POST
+  api.add_resource(GameInstanceController, "/api/games/<int:game_id>")    # GET / PATCH / DELETE
+  
+  # ---- Teams ----
+  api.add_resource(TeamController, "/api/teams", "/api/teams/<int:team_id>")    # POST / PATCH (id) / DELETE (id)
+  api.add_resource(TeamMemberController, "/api/teams/<int:team_id>/members")    # POST / DELETE (members) 
+  api.add_resource(MyTeamsController, "/api/me/teams")    # GET
+  
+  # ---- Sponsors ----
+  api.add_resource(SponsorController, "/api/sponsors")    # Full CRUD
+  api.add_resource(EventSponsorController, "/api/events/<int:event_id>/sponsors")
+  
+  # ---- Events ----
+  api.add_resource(EventController, "/api/events")    # GET (ALL) / POST
+  api.add_resource(EventInstanceController, "/api/events/<int:event_id>")   # GET / PATCH / DELETE
+  
+  # ---- Tournaments ----
+  api.add_resource(TournamentController, "/api/events/<int:event_id>/tournaments")    # GET / POST
+  api.add_resource(TournamentInstanceController, "/api/events/<int:event_id>/tournaments/<int:tournament_id>")    # GET / PATCH / DELETE
+  
+  # ---- Competitors & Standings ---- [can refer to team or user]
+  # GET / POST / * DELETE (competitor_id). *event owner resource
+  api.add_resource(
+    CompetitorController, 
+    "/api/events/<int:event_id>/tournaments/<int:tournament_id>/competitors",
+    "/api/events/<int:event_id>/tournaments/<int:tournament_id>/competitors/<int:competitor_id>"
+  )  
+  # PATCH  
+  api.add_resource(
+    UpdateCompetitorStanding, 
+    "/api/events/<int:event_id>/tournaments/<int:tournament_id>/competitors/<int:competitor_id>"
+  )
+  
+  # ---- Bracket ----
+  # GET / POST
+  api.add_resource(
+    BracketController,
+    "/api/events/<int:event_id>/tournaments/<int:tournament_id>/bracket"
+  )    
+  # GET / PATCH / DELETE
+  api.add_resource(
+    BracketInstanceController, 
+    "/api/events/<int:event_id>/tournaments/<int:tournament_id>/bracket/<int:bracket_id>"
+    )    
+  
+  # ---- Matches ----
+  # Full CRUD
+  api.add_resource(
+    MatchController, 
+    "/api/events/<int:event_id>/tournaments/<int:tournament_id>/matches",
+    "/api/events/<int:event_id>/tournaments/<int:tournament_id>/matches/<int:match_id>"
+  )   
+
+  # simple liveness check at the root
+  @app.route("/")
+  def index():
+      return "Flask server is running."
+  
+  return app
+  
+app = create_app()
+  
+if __name__ == "__main__":
+  app = create_app()
+  app.run(debug=True, port=5555)
