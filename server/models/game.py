@@ -20,7 +20,7 @@ class Game(db.Model):
   def validate_string(self, key, value):
     if not isinstance(value, str):
       raise ValueError(f"{key} must be a string")
-    return value.lower().strip()
+    return value.upper().strip()
   
   def to_dict(self):
     return {
@@ -28,5 +28,6 @@ class Game(db.Model):
       "name": self.name,
       "slug": self.slug,
       "publisher": self.publisher,
-      "genre": self.genre
+      "genre": self.genre,
+      "picture_url": self.picture_url
     }

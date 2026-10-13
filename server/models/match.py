@@ -69,7 +69,7 @@ class Match(db.Model):
       "tournament_id": self.tournament_id,
       "round": self.round,
       "start_time": self.start_time,
-      "status": self.status,
+      "status": self.status.value,
       "competitor_a_id": self.competitor_a_id,
       "competitor_b_id": self.competitor_b_id,
       "winner_id": self.winner_id

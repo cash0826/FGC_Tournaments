@@ -35,7 +35,7 @@ class EventSponsor(db.Model):
   def to_dict(self):
     return {
       "event_id": self.event_id,
-      "sponsor_id": self.sponsor_id,
+      "sponsor": self.sponsor.to_dict(),
       "sponsorship_tier": self.sponsorship_tier.value,
       "amount": self.amount
     }

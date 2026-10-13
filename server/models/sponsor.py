@@ -13,8 +13,14 @@ class Sponsor(db.Model):
   # sponsors back sponsored_events (has many)
   # Opted to keep children if parent is deleted (no cascade)
   sponsored_events = db.relationship("EventSponsor", back_populates="sponsor")
+
+  @validates("name")
+  def validates_text(self, key, value):
+    if not isinstance(value, str):
+      raise ValueError(f"{key} must be a string")
+    return value
   
-  @validates("name", "logo_url", "website")
+  @validates("logo_url", "website")
   def validates_text(self, key, value):
     if not isinstance(value, str):
       raise ValueError(f"{key} must be a string")

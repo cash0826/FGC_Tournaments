@@ -1,10 +1,10 @@
-from random import choice as rc
+from random import choice as rc, sample
 from faker import Faker
 from app import create_app
 from extensions import db
 from models import (
   User, Role, UserRole, UserSocialAccount, Platform, 
-  Event, Game, Tournament, Bracket
+  Event, Game, Tournament, Bracket, Sponsor, EventSponsor
 )
 import datetime as dt
 fake = Faker()
@@ -134,6 +134,22 @@ with app.app_context():
   ])
   db.session.commit()
   
+  print("Creating fake sponsors...")
+  sponsors = []
+  for i in range(20):
+    name = fake.company()
+    name_transformed = name.lower().strip().replace(".", "").replace(",", "").replace(" ", "")
+    website = f"https://{name_transformed}.org"
+    contact_email = f"example@{name_transformed}.com"
+    sponsor = Sponsor(
+      name=name,
+      website=website,
+      contact_email=contact_email
+    )
+    sponsors.append(sponsor)
+  db.session.add_all(sponsors)
+  db.session.commit()
+  
   print("Creating test tournaments...")
   tournaments = []
   for event in events:
@@ -156,6 +172,21 @@ with app.app_context():
       )
       tournaments.append(tournament)
       db.session.add(tournament)
+  db.session.commit()
+  
+  print("Assigning fake sponsors to tournaments...")
+  event_sponsors = []
+  for event in events:
+    sponsor_count = fake.random_int(min=1, max=min(6, len(sponsors)))
+    for sponsor in sample(sponsors, sponsor_count):
+      sponsorship_tier = rc(["community", "bronze", "silver", "gold"])
+      amount = fake.pyfloat(left_digits=4, right_digits=2, positive=True, min_value=100)
+      db.session.add(EventSponsor(
+        event=event,
+        sponsor=sponsor,
+        sponsorship_tier=sponsorship_tier,
+        amount=amount
+      ))
   db.session.commit()
 
   print("Creating one bracket per tournament...")
