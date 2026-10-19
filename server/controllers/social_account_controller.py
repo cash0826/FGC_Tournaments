@@ -28,13 +28,9 @@ class UserSocialAccount(Resource):
       return {"error": str(error)}, error.status_code
     return new_social.to_dict(), 201
   
+  # /me/social_accounts/{platform}
   @jwt_required()
-  def delete(self):
-    data = request.get_json()
-    if not isinstance(data, dict):
-      return {"error": "Request body must be a JSON object."}, 400
-    platform = data.get("platform")
-    
+  def delete(self, platform):
     try:
       SocialAccountService.unlink_social(user_id=int(_current_user_id()), platform=platform)
     except AppError as error:
