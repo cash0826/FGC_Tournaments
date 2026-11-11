@@ -1,0 +1,366 @@
+
+.hero-section{
+  background-image:
+    linear-gradient(to right, rgba(0, 0, 0, 0.75) 50%, rgba(54, 0, 71, 0.25) 100%),
+    url("../assets/hero-img1.jpeg");
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: start;
+  align-content: center;
+  justify-content: center;
+  padding-inline-start: 155px;
+  padding-inline-end: 40px;
+  padding-block-start: 204px;
+  padding-block-end: 84px;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  /* margin-block-start: 120px; */
+  max-height: 516px;
+  max-block-size: 516px;
+  min-height: 396px;
+  min-block-size: 396px;
+}
+
+.display-text {
+  color: var(--white);
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: start;
+  align-content: stretch;
+  justify-content: start;
+  row-gap: 16px;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  max-width: 440px;
+  max-inline-size: 440px;
+
+  /* text */
+  .display {
+    font-size: var(--display-size);
+    font-family: var(--main);
+    line-height: 1.4146341463414633;
+    letter-spacing: 0px;
+    text-transform: lowercase;
+    text-shadow: #ffffff 1px 0 10px;
+  }
+
+  .subtitle {
+    position: relative;
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    align-items: start;
+    align-content: stretch;
+    justify-content: start;
+    row-gap: 8px;
+    flex-direction: column;
+    flex-wrap: nowrap;
+
+    p {
+      font-size: var(--large);
+    }
+  }
+}
+
+.main-events-section {
+  position: relative;
+  width: 100%;
+  background: #e5e5e5FF;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: start;
+  padding-inline-start: 40px;
+  padding-inline-end: 40px;
+  padding-block-start: 24px;
+  padding-block-end: 62px;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  flex-grow: 1;
+  min-height: 774px;
+  min-block-size: 774px;
+
+  .list {
+    position: relative;
+    width: 100%;
+    background: #ffffffFF;
+    border-end-start-radius: 8px;
+    border-end-end-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    align-items: start;
+    align-content: space-evenly;
+    justify-content: start;
+    column-gap: 20px;
+    row-gap: 8px;
+    padding-inline-start: 115px;
+    padding-inline-end: 115px;
+    padding-block-start: 8px;
+    padding-block-end: 62px;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    flex-grow: 1;
+    min-height: 578px;
+    min-block-size: 578px;
+
+    h2 {
+      color: var(--white)
+    }
+
+    .details {
+      color: var(--primary100);
+      position: relative;
+      width: 100%;
+      display: flex;
+      align-items: start;
+      align-content: stretch;
+      justify-content: start;
+      column-gap: 20px;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      flex-grow: 1;
+    }
+
+    .row-1-card {
+      background-image:
+        linear-gradient(to right, rgba(0, 14, 111, 0.9) 20%, rgba(0, 14, 111, 0.0) 80%),
+        url("../assets/card-img.jpg");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+
+      top: 0px;
+      left: 0px;
+      position: relative;
+      width: 100%;
+      border-start-start-radius: 8px;
+      border-start-end-radius: 8px;
+      display: flex;
+      align-items: start;
+      align-content: stretch;
+      justify-content: space-between;
+      padding-inline-start: 20px;
+      padding-inline-end: 20px;
+      padding-block-start: 16px;
+      padding-block-end: 16px;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      flex-grow: 1;
+      flex-shrink: 0;
+      min-height: 240px;
+      min-block-size: 240px;
+      min-width: 325px;
+      min-inline-size: 325px;
+    }
+
+    .row-2 {
+      position: relative;
+      width: 100%;
+      display: flex;
+      align-items: start;
+      align-content: stretch;
+      justify-content: start;
+      column-gap: 20px;
+      row-gap: 8px;
+      flex-direction: row;
+      flex-wrap: wrap;
+      flex-grow: 1;
+      min-height: 250px;
+      min-block-size: 250px;
+
+      .card {
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: relative;
+        width: 100%;
+        border-end-start-radius: 8px;
+        border-end-end-radius: 8px;
+        display: flex;
+        align-items: start;
+        align-content: stretch;
+        justify-content: space-between;
+        padding-inline-start: 20px;
+        padding-inline-end: 20px;
+        padding-block-start: 16px;
+        padding-block-end: 16px;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        flex: 1;
+        flex-grow: 1;
+        flex-shrink: 0;
+        min-height: 240px;
+        min-block-size: 240px;
+        min-width: 325px;
+        min-inline-size: 325px;
+      }
+
+      #card-2 {
+        background-image:
+          linear-gradient(to right, rgba(0, 14, 111, 0.9) 20%, rgba(0, 14, 111, 0.0) 80%),
+          url("../assets/card-img2.jpg");
+      }
+
+      #card-3 {
+        background-image:
+          linear-gradient(to right, rgba(0, 14, 111, 0.9) 20%, rgba(0, 14, 111, 0.0) 80%),
+          url("../assets/card-img3.jpg");
+      }
+
+      #card-4 {
+        background-image:
+          linear-gradient(to right, rgba(0, 14, 111, 0.9) 20%, rgba(0, 14, 111, 0.0) 80%),
+          url("../assets/card-img4.jpg");
+      }
+    }
+  }
+}
+
+.top-banner {
+  color: var(--primary500);
+  position: relative;
+  width: 100%;
+  background: var(--white);
+  border-start-start-radius: 8px;
+  border-start-end-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  align-content: stretch;
+  justify-content: space-around;
+  padding-block-start: 16px;
+  padding-block-end: 16px;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  min-height: 62px;
+  min-block-size: 62px;
+  font-size: var(--large);
+}
+
+.title {
+  color: var(--primary500);
+  position: relative;
+  width: 100%;
+  background: #FFFFFFFF;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  align-content: stretch;
+  justify-content: center;
+  padding-block-start: 48px;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  min-height: 92px;
+  min-block-size: 92px;
+}
+
+.past-winners-section{
+  background-image:
+    linear-gradient(to right, rgba(0, 0, 0, 0.75) 50%, rgba(54, 0, 71, 0.25) 100%),
+    url("../assets/hero-img2.jpeg");
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: start;
+  align-content: center;
+  justify-content: center;
+  padding-inline-start: 155px;
+  padding-inline-end: 40px;
+  padding-block-start: 84px;
+  padding-block-end: 84px;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  flex-grow: 1;
+  min-height: 480px;
+  min-block-size: 480px;
+
+  button {
+    width: fit-content;
+  }
+}
+
+#contact{
+  position: relative;
+  width: 100%;
+  background: #e5e5e5FF;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: start;
+  padding-inline-start: 40px;
+  padding-inline-end: 40px;
+  padding-block-start: 24px;
+  padding-block-end: 62px;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  flex-grow: 1;
+  min-height: 774px;
+  min-block-size: 774px;
+}
+
+.form {
+  position: relative;
+  width: 100%;
+  background: var(--primary500);
+  display: flex;
+  align-items: center;
+  align-content: stretch;
+  justify-content: start;
+  row-gap: 24px;
+  padding-inline-start: 95px;
+  padding-inline-end: 95px;
+  padding-block-start: 24px;
+  padding-block-end: 62px;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+.form-inputs {
+  position: relative;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: start;
+  align-content: stretch;
+  justify-content: start;
+  row-gap: 24px;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+.input {
+  color: var(--gray350);
+  background-color: var(--white);
+  position: relative;
+  width: 480px;
+  height: 50px;
+  border-radius: 8px;
+  display: flex;
+  align-items: start;
+  align-content: stretch;
+  justify-content: start;
+  padding-inline-start: 16px;
+  padding-inline-end: 16px;
+  padding-block-start: 16px;
+  padding-block-end: 16px;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+}
+
+#text-input {
+  height: 150px;
+}

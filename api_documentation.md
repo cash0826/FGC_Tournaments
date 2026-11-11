@@ -186,9 +186,9 @@ Requires admin role: [Admin](#admin-resources)
 #### Unlink a social account from your user profile
 
 ```http
-  DELETE /api/me/social_accounts
+  DELETE /api/me/social_accounts/{platform}
 ```
-| Keys supported   | Value Type  | Considerations                    |
+| Path Param       | Value Type  | Considerations                    |
 | :--------------- | :---------- | :-------------------------------- |
 | `platform`       | `string`    | **Required**. Accepts x, twitch_tv, discord, xbox, steam, epic_games, battle.net and riot_games. |
 

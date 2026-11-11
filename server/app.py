@@ -32,7 +32,11 @@ def create_app():
   api.add_resource(Login, "/api/login")   # POST
   api.add_resource(Me, "/api/me")   # GET / PATCH 
   api.add_resource(PasswordUpdate, "/api/me/password")    # PATCH
-  api.add_resource(UserSocialAccount, "/api/me/social_accounts")    # GET / POST / DELETE
+  api.add_resource(
+    UserSocialAccount, 
+    "/api/me/social_accounts", 
+    "/api/me/social_accounts/<string:platform>"
+  )    # GET / POST / DELETE
   
   # ---- User Management for Admins ----
   api.add_resource(DeleteUser, "/api/users/<int:user_id>")   # DELETE user (admin resource)

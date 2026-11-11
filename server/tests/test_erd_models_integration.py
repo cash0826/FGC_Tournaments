@@ -150,7 +150,7 @@ def test_user_persists_and_to_dict_excludes_sensitive_fields(app, session):
     loaded = session.get(User, user.id)
     serialized = loaded.to_dict()
     assert serialized["email"] == "player@example.com"
-    assert serialized["gamer_name"] == "playerone"
+    assert serialized["gamer_name"] == "PlayerOne"
     assert "password_hash" not in serialized
     assert "_password_hash" not in serialized
     assert "contact_number" not in serialized
@@ -215,7 +215,7 @@ def test_event_host_and_tournament_game_relationships_persist(app, session):
     session.commit()
 
     assert tournament.event.host is host
-    assert tournament.game.name == "street fighter 6"
+    assert tournament.game.name == "STREET FIGHTER 6"
     assert event.tournaments == [tournament]
     assert game.tournaments == [tournament]
 

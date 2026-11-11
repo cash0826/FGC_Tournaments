@@ -73,7 +73,7 @@ class User(db.Model):
   def validate_text(self, key, value):
     if not isinstance(value, str):
       raise ValueError(f"{key} must be a string")
-    return value.lower().strip()
+    return value.strip()
   
   @validates("contact_number")
   def validate_contact_number(self, key, number):

@@ -29,5 +29,4 @@ class TeamService(BaseService):
         f"{', '.join(sorted(unsupported_fields))}."
       )
     team_data = dict(data)
-    team_data.pop("team")
     return super().update(team_id, team_data)
