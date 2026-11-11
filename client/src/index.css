@@ -1,9 +1,78 @@
+/* Global themes */
+
+@import url("https://fonts.googleapis.com/css2?family=Alumni+Sans:wght@400;500;600;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+  --primary100: #b1bdff;
+  --primary200: #29a2ff;
+  --primary300: #2d4dff;
+  --primary400: #001fcc;
+  --primary500: #000e6f;
+  --accent: #7febf0;
+
+  --white: #ffffff;
+  --black: #000000;
+  --gray050: #e5e5e5;
+  --gray100: #cccccc;
+  --gray150: #b2b2b2;
+  --gray200: #999999;
+  --gray250: #7f7f7f;
+  --gray300: #666666;
+  --gray350: #4c4c4c;
+  --gray400: #333333;
+  --gray450: #191919;
+
+  --error100: #ffbfbf;
+  --error200: #e57272;
+  --error300: #cc1313;
+  --error400: #990002;
+  --error500: #660001;
+
+  --main: 'Alumni Sans', sans-serif;
+  --bold: 'Archivo Black', sans-serif;
+  --roboto: 'Roboto', sans-serif;
+
+  --display-size: 82px;
+  --display-subheading-size: 64px;
+  --h1-size: 40px;
+  --h1-subheading-size: 36px;
+  --h2-size: 36px;
+  --h2-subheading-size: 32x;
+  --h3-size: 32px;
+  --h3-subheading-size: 28px;
+  --large: 20px;
+  --default: 16px;
+  --small: 14px;
+
+  font-family: var(--main);
+  line-height: 1.1;
+  margin: 0;
+}
+
 *, ::after, ::before {
   box-sizing: border-box;
 }
 
-@-ms-viewport {
-    width: device-width
+html, body {
+  margin: 0;
+  min-height: 100%;
+  min-width: 100%;
+  padding: 0;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+}
+
+.main {
+  flex: 1;
+}
+
+a:hover, a:active {
+  color: var(--accent)
 }
 
 footer, header, main, nav, section {
@@ -11,29 +80,85 @@ footer, header, main, nav, section {
   width: 100%;
 }
 
-#root {
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
+footer {
+  background: var(--primary500);
+  position: relative;
+  width: 100%;
+  overflow: hidden;
   display: flex;
+  align-items: start;
+  align-content: stretch;
+  justify-content: start;
+  column-gap: 40px;
   flex-direction: column;
-  box-sizing: border-box;
+  flex-wrap: nowrap;
+  min-height: 178px;
+  min-block-size: 178px;
 }
 
-body {
+h1, h2, h3 {
   margin: 0;
-  line-height: 24px;
-  font-family: "Roboto", sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  color: #1c1836;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  margin-top: 0;
-  margin-bottom:.5rem;
-  padding: 0;
-  font-weight: 600;
+h1 {
+  font-size: var(--h1-size);
+  font-family: var(--main);
+  text-transform: uppercase;
 }
+
+h2 {
+  font-size: var(--h2-size);
+  font-family: var(--main);
+}
+
+h3 {
+  font-size: var(--h3-size);
+  line-height: 1.125;
+  font-weight: 400;
+}
+
+p {
+  font-size: var(--default);
+  margin: 0;
+  text-align: left;
+  line-height: 1.1;
+}
+
+#text {
+  line-height: 1;
+}
+
+img {
+  max-width: 100%;;
+  display: block;
+}
+
+button {
+  color: var(--white);
+  background: #ffffff1A;
+  font-family: var(--main);
+  font-weight: 600;
+  font-size: var(--large);
+  position: relative;
+  width: 100%;
+  border: 1px solid #ffffffFF;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  align-content: stretch;
+  justify-content: center;
+  padding-inline-start: 16px;
+  padding-inline-end: 16px;
+  padding-block-start: 8px;
+  padding-block-end: 8px;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  flex-grow: 0;
+  align-self: stretch;
+  justify-self: stretch;
+}
+
+/* .dagger-tournaments {
+
+} */
+

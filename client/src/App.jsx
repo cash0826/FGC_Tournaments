@@ -17,6 +17,7 @@ import NotFound from "./pages/NotFound";
 
 // Components
 import Footer from './components/Footer'
+import NavBar from './components/NavBar'
 import ProtectedRoute from "./components/ProtectedRoute";
 import RequireRole from "./components/RequireRole";
 
@@ -27,6 +28,10 @@ function App() {
 
   return (
     <>
+      <header>
+        <NavBar/>
+      </header>
+
       {/* Public Routes */}
       <Routes>
         <Route path="/" element={<Home />} />
